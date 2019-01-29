@@ -19,4 +19,7 @@
     <string name="genres_title">Genre(s)</string>
     <string name="detailed_movie_languages_text">Detailed Movie Language(s) Text</string>
     <string name="languages_title">Language(s) spoken</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
