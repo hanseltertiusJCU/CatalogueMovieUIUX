@@ -1,0 +1,100 @@
+package support;
+
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+import com.example.android.cataloguemovieuiux.R;
+
+public class MovieItemClickSupport {
+    private final RecyclerView mRecyclerView;
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
+
+    // Create View.OnClickListener object
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(mOnItemClickListener != null){
+                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(view);
+                // Use the interface method based on adapter position in RecyclerView
+                mOnItemClickListener.onItemClicked(mRecyclerView, holder.getAdapterPosition(), view);
+            }
+        }
+    };
+
+    private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+            if(mOnItemLongClickListener != null){
+                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(view);
+                return mOnItemLongClickListener.onItemLongClicked(mRecyclerView, holder.getAdapterPosition(), view);
+            }
+            return false;
+        }
+    };
+
+    // Attach on click listener to recyclerview
+    private RecyclerView.OnChildAttachStateChangeListener mAttachListener = new RecyclerView.OnChildAttachStateChangeListener() {
+        @Override
+        public void onChildViewAttachedToWindow(@NonNull View view) {
+            if(mOnItemClickListener != null){
+                view.setOnClickListener(mOnClickListener);
+            }
+            if(mOnItemLongClickListener != null){
+                view.setOnLongClickListener(mOnLongClickListener);
+            }
+        }
+
+        @Override
+        public void onChildViewDetachedFromWindow(@NonNull View view) {
+
+        }
+    };
+
+    // Create constructor that set tag to recyclerview
+    // as well as attach listener to recyclerview items
+    private MovieItemClickSupport(RecyclerView recyclerView){
+        mRecyclerView = recyclerView;
+        mRecyclerView.setTag(R.id.movie_item_click_support, this);
+        mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);
+    }
+
+    // Method to return support that attach support to the view
+    public static MovieItemClickSupport addSupportToView(RecyclerView view){
+        MovieItemClickSupport support = (MovieItemClickSupport) view.getTag(R.id.movie_item_click_support);
+        if(support == null){
+            support = new MovieItemClickSupport(view);
+        }
+        return support;
+    }
+
+    public static MovieItemClickSupport removeSupportFromView(RecyclerView view){
+        MovieItemClickSupport support = (MovieItemClickSupport) view.getTag(R.id.movie_item_click_support);
+        if(support != null){
+            support.detach(view);
+        }
+        return support;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.mOnItemClickListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.mOnItemLongClickListener = listener;
+    }
+
+    private void detach(RecyclerView view){
+        view.removeOnChildAttachStateChangeListener(mAttachListener);
+        view.setTag(R.id.movie_item_click_support, null);
+    }
+
+    public interface OnItemClickListener{
+        void onItemClicked(RecyclerView recyclerView, int position, View view);
+    }
+
+    public interface OnItemLongClickListener{
+        boolean onItemLongClicked(RecyclerView recyclerView, int position, View view);
+    }
+}

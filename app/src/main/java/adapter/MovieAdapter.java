@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import item.MovieItems;
 
-// todo: change into adapter for recyclerview
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private ArrayList<MovieItems> mMovieData = new ArrayList<>();
@@ -54,7 +53,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        // Set layout xml yang berisi movie items ke View
         View movieItem = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movie_items, viewGroup, false);
+        // Return MovieViewHolder dengan memanggil constructor MovieViewHolder yang berisi View sbg
+        // parameter
         return new MovieViewHolder(movieItem);
     }
 
@@ -62,6 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int position) {
         // Load image jika ada poster path
         Picasso.get().load("https://image.tmdb.org/t/p/w185" + mMovieData.get(position).getMoviePosterPath()).into(movieViewHolder.imageViewMoviePoster);
+
         movieViewHolder.textViewMovieTitle.setText(mMovieData.get(position).getMovieTitle());
 
         // Set textview content in movie item rating to contain a variety of different colors
@@ -108,6 +111,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         TextView textViewMovieReleaseDate;
         TextView textViewMovieOriginalLanguage;
 
+        // Assign view di dalam constructor
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewMoviePoster = itemView.findViewById(R.id.poster_image);

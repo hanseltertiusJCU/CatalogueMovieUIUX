@@ -20,8 +20,9 @@ import java.util.ArrayList;
 import adapter.MovieAdapter;
 import item.MovieItems;
 import loader.MovieAsyncTaskLoader;
+import support.MovieItemClickSupport;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<MovieItems>>, AdapterView.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<MovieItems>>{
 
     static final int LOADER_ID_MOVIE = 101;
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
@@ -35,9 +36,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private Button searchButton;
     private ProgressBar progressBar;
     private String movieSearch;
-
-
-    private ArrayList<MovieItems> list;
 
     View.OnClickListener myListener = new View.OnClickListener() {
         @Override
@@ -72,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         movieAdapter.notifyDataSetChanged();
 
         recyclerView = findViewById(R.id.rv_list);
-
-//        // Enable on item click listener untuk dapat call onItemClick dari setiap list item
-//        recyclerView.setOnItemClickListener(this);
 
         searchEditText = findViewById(R.id.edit_movie_search);
         searchButton = findViewById(R.id.button_search);
@@ -112,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<MovieItems>> loader, ArrayList<MovieItems> movieItems) {
+    public void onLoadFinished(Loader<ArrayList<MovieItems>> loader, final ArrayList<MovieItems> movieItems) {
         // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
         // yang menandakan bahwa loadingnya sudah selesai
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -120,26 +115,32 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         progressBar.setVisibility(View.GONE);
         movieAdapter.setData(movieItems);
         recyclerView.setAdapter(movieAdapter);
-        // bikin item click listener class custom and implement it here
+        // Set item click listener di dalam recycler view
+        MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
+            // Implement interface method
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+                // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+                showSelectedMovieItems(movieItems.get(position));
+            }
+        });
     }
 
-    @Override
-    public void onLoaderReset(Loader<ArrayList<MovieItems>> loader) {
-        movieAdapter.setData(null);
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    private void showSelectedMovieItems(MovieItems movieItems){
         // Dapatkan id dan title bedasarkan ListView item
-        int movieIdItem = movieAdapter.getmMovieData().get(position).getId();
-        String movieTitleItem = movieAdapter.getmMovieData().get(position).getMovieTitle();
+        int movieIdItem = movieItems.getId();
+        String movieTitleItem = movieItems.getMovieTitle();
         Intent intentWithMovieIdData = new Intent(MainActivity.this, DetailActivity.class);
         // Bawa data untuk disampaikan ke {@link DetailActivity}
         intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
         intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
         // Start activity tujuan bedasarkan intent object
         startActivity(intentWithMovieIdData);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<MovieItems>> loader) {
+        movieAdapter.setData(null);
     }
 
 }
