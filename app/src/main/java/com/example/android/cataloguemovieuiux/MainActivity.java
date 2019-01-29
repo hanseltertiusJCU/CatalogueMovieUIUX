@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,12 +29,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
     // Key untuk meretrieve search
     private static final String EXTRAS_MOVIE_SEARCH = "EXTRAS_MOVIE_SEARCH";
-    private ListView listView;
+    private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private EditText searchEditText;
     private Button searchButton;
     private ProgressBar progressBar;
     private String movieSearch;
+
+
+    private ArrayList<MovieItems> list;
+
     View.OnClickListener myListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             bundle.putString(EXTRAS_MOVIE_SEARCH, movieSearch);
 
             // Ketika kita ngeclick search, maka data akan melakukan loading kembali
-            listView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
 
             // Restart loader karena kita sudah membuat loader di onCreate
@@ -65,11 +71,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         movieAdapter = new MovieAdapter(this);
         movieAdapter.notifyDataSetChanged();
 
-        listView = findViewById(R.id.listView);
+        recyclerView = findViewById(R.id.rv_list);
 
-        listView.setAdapter(movieAdapter);
-        // Enable on item click listener untuk dapat call onItemClick dari setiap list item
-        listView.setOnItemClickListener(this);
+//        // Enable on item click listener untuk dapat call onItemClick dari setiap list item
+//        recyclerView.setOnItemClickListener(this);
 
         searchEditText = findViewById(R.id.edit_movie_search);
         searchButton = findViewById(R.id.button_search);
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         progressBar = findViewById(R.id.progress_bar);
 
         // Set visiblity of views ketika sedang dalam meretrieve data
-        listView.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
         searchButton.setOnClickListener(myListener);
@@ -110,16 +115,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<ArrayList<MovieItems>> loader, ArrayList<MovieItems> movieItems) {
         // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
         // yang menandakan bahwa loadingnya sudah selesai
-        listView.setVisibility(View.VISIBLE);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
         movieAdapter.setData(movieItems);
-
+        recyclerView.setAdapter(movieAdapter);
+        // bikin item click listener class custom and implement it here
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<MovieItems>> loader) {
         movieAdapter.setData(null);
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
