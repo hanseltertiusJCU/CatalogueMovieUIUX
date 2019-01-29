@@ -3,6 +3,7 @@ package loader;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
+import com.example.android.cataloguemovieuiux.BuildConfig;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
@@ -17,7 +18,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class MovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<MovieItems>> {
 
-    private static final String MOVIE_API_KEY = "920c265d2e074ebf06d98bf438bded70";
+    private String apiKey = BuildConfig.MOVIE_API_KEY;
     private ArrayList<MovieItems> mMovieData;
     private boolean mHasResult = false;
     private String mMovieSearch;
@@ -84,7 +85,7 @@ public class MovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<MovieItems>>
         final ArrayList<MovieItems> movieItemses = new ArrayList<>();
 
         if (mNoKeywordMovieSearch) {
-            String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + MOVIE_API_KEY;
+            String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + apiKey;
 
             // Panggil get method untuk melakukan request terhadap web service melalui HTTP GET
             syncHttpClient.get(nowPlayingUrl, new AsyncHttpResponseHandler() {
@@ -123,7 +124,7 @@ public class MovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<MovieItems>>
                 }
             });
         } else {
-            String searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=" + MOVIE_API_KEY + "&query=" + mMovieSearch;
+            String searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=" + apiKey + "&query=" + mMovieSearch;
             syncHttpClient.get(searchUrl, new AsyncHttpResponseHandler() {
 
                 @Override

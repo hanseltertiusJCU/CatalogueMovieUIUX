@@ -4,6 +4,7 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.preference.PreferenceActivity;
 
+import com.example.android.cataloguemovieuiux.BuildConfig;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
@@ -17,7 +18,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class DetailedMovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<DetailedMovieItems>> {
 
-    private static final String MOVIE_API_KEY = "920c265d2e074ebf06d98bf438bded70";
+    private String apiKey = BuildConfig.MOVIE_API_KEY;
     private ArrayList<DetailedMovieItems> mDetailedMovieData;
     private boolean mHasResult = false;
     private int mDetailedMovieId;
@@ -66,7 +67,7 @@ public class DetailedMovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Deta
 
         final ArrayList<DetailedMovieItems> detailedMovieItemses = new ArrayList<>();
 
-        String detailedMovieUrl = "https://api.themoviedb.org/3/movie/" + mDetailedMovieId + "?api_key=" + MOVIE_API_KEY;
+        String detailedMovieUrl = "https://api.themoviedb.org/3/movie/" + mDetailedMovieId + "?api_key=" + apiKey;
 
         syncHttpClient.get(detailedMovieUrl, new AsyncHttpResponseHandler() {
 

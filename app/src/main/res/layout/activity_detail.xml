@@ -39,10 +39,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="@string/detailed_movie_title_text"
+                    tools:text="@string/detailed_movie_title_text"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/movie_detailed_title"
                     android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     />
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="@string/detailed_movie_tagline_text"
+                    tools:text="@string/detailed_movie_tagline_text"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:textColor="@color/color_black"/>
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="@string/detailed_movie_status_text"
+                    tools:text="@string/detailed_movie_status_text"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:textColor="@color/color_black"/>
@@ -72,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="@string/detailed_movie_rating_text"
+                    tools:text="@string/detailed_movie_rating_text"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/languages_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/movie_section_title"
                     android:textStyle="bold"
                     android:textColor="@color/color_title"/>
 
@@ -103,14 +103,14 @@
                     android:id="@+id/detailed_movie_languages_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/detailed_movie_languages_text"
+                    tools:text="@string/detailed_movie_languages_text"
                     android:textColor="@color/color_black"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/genres_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/movie_section_title"
                     android:textStyle="bold"
                     android:textColor="@color/color_title"/>
 
@@ -118,14 +118,14 @@
                     android:id="@+id/detailed_movie_genres_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/detailed_movie_genres_text"
+                    tools:text="@string/detailed_movie_genres_text"
                     android:textColor="@color/color_black"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/release_date_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/movie_section_title"
                     android:textStyle="bold"
                     android:textColor="@color/color_title"/>
 
@@ -133,14 +133,14 @@
                     android:id="@+id/detailed_movie_release_date_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/detailed_movie_release_date_text"
+                    tools:text="@string/detailed_movie_release_date_text"
                     android:textColor="@color/colorAccent"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/overview_title"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/movie_section_title"
                     android:textStyle="bold"
                     android:textColor="@color/color_title"/>
 
@@ -148,7 +148,7 @@
                     android:id="@+id/detailed_movie_overview_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/detailed_movie_overview_text"
+                    tools:text="@string/detailed_movie_overview_text"
                     android:textColor="@color/color_black"/>
 
             </LinearLayout>
