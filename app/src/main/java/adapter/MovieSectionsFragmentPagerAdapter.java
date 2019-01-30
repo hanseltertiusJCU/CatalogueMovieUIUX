@@ -10,6 +10,7 @@ import com.example.android.cataloguemovieuiux.R;
 
 import fragment.NowPlayingMovieFragment;
 import fragment.SearchMovieFragment;
+import fragment.UpcomingMovieFragment;
 
 public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
@@ -25,6 +26,8 @@ public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if(position == 0){
             return new NowPlayingMovieFragment();
+        } else if (position == 1){
+            return new UpcomingMovieFragment();
         } else {
             return new SearchMovieFragment();
         }
@@ -33,7 +36,7 @@ public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
     // Method ini menentukan berapa banyak tabs yang ada
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     // Method ini berguna untuk mereturn tab title
@@ -44,6 +47,8 @@ public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return mContext.getString(R.string.now_playing);
             case 1:
+                return mContext.getString(R.string.upcoming);
+            case 2:
                 return mContext.getString(R.string.search_movie);
             default:
                 return null;

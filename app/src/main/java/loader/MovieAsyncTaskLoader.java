@@ -166,7 +166,37 @@ public class MovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<MovieItems>>
                 });
             }
         } else if(mMovieMode.equals("nowPlaying")){
-            String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + apiKey;
+            String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + apiKey + "&language=en-US";
+            syncHttpClient.get(nowPlayingUrl, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        String result = new String(responseBody);
+                        JSONObject responseObject = new JSONObject(result);
+                        JSONArray results = responseObject.getJSONArray("results");
+                        // Iterate semua data yg ada dan tambahkan ke ArrayList
+                        for (int i = 0; i < results.length(); i++) {
+                            JSONObject movie = results.getJSONObject(i);
+                            MovieItems movieItems = new MovieItems(movie);
+                            // Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
+                            // String, sehingga perlu menggunakan "" di dalam null
+                            if(!movieItems.getMoviePosterPath().equals("null")){
+                                movieItemses.add(movieItems);
+                            }
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    // Do nothing jika responsenya itu tidak berhasil
+                }
+            });
+        } else if(mMovieMode.equals("upComing")){
+            String nowPlayingUrl = "https://api.themoviedb.org/3/movie/upcoming?api_key=" + apiKey + "&language=en-US";
             syncHttpClient.get(nowPlayingUrl, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
