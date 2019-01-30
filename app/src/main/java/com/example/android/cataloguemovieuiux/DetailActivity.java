@@ -99,7 +99,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         textViewDetailedMovieTagline.setText("\"" + detailedMovieItems.get(0).getDetailedMovieTagline() + "\"");
 
         // Set textview content in detailed movie runtime to contain a variety of different colors
-        Spannable statusWord = new SpannableString("Status : ");
+        Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status));
         statusWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, statusWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewDetailedMovieRuntime.setText(statusWord);
         Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getDetailedMovieStatus());
@@ -107,21 +107,22 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         textViewDetailedMovieRuntime.append(statusDetailedMovie);
 
         // Set textview content in detailed movie rating to contain a variety of different colors
-        Spannable ratingWord = new SpannableString("Rating : ");
+        Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating));
         ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewDetailedMovieRating.setText(ratingWord);
         Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getDetailedMovieRatings());
         ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewDetailedMovieRating.append(ratingDetailedMovie);
 
-        Spannable ratingFromWord = new SpannableString(" from ");
+        Spannable ratingFromWord = new SpannableString(getString(R.string.span_movie_detail_from));
         ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewDetailedMovieRating.append(ratingFromWord);
+
         Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getDetailedMovieRatingsVote());
         ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovieVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewDetailedMovieRating.append(ratingDetailedMovieVotes);
 
-        Spannable ratingVotesWord = new SpannableString(" vote(s)");
+        Spannable ratingVotesWord = new SpannableString(getString(R.string.span_movie_detail_votes));
         ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textViewDetailedMovieRating.append(ratingVotesWord);
 

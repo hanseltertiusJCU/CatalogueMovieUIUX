@@ -1,5 +1,7 @@
 package item;
 
+import com.example.android.cataloguemovieuiux.R;
+
 import org.json.JSONObject;
 
 public class MovieItems {

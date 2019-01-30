@@ -68,7 +68,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         movieViewHolder.textViewMovieTitle.setText(mMovieData.get(position).getMovieTitle());
 
         // Set textview content in movie item rating to contain a variety of different colors
-        Spannable ratingMovieItemWord = new SpannableString("Ratings : ");
+        Spannable ratingMovieItemWord = new SpannableString(context.getString(R.string.span_movie_item_ratings));
         ratingMovieItemWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingMovieItemWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         movieViewHolder.textViewMovieRatings.setText(ratingMovieItemWord);
         Spannable ratingMovieItem = new SpannableString(mMovieData.get(position).getMovieRatings());
@@ -76,7 +76,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         movieViewHolder.textViewMovieRatings.append(ratingMovieItem);
 
         // Set textview content in movie item release date to contain a variety of different colors
-        Spannable releaseDateMovieItemWord = new SpannableString("Release Date : ");
+        Spannable releaseDateMovieItemWord = new SpannableString(context.getString(R.string.span_movie_item_release_date));
         releaseDateMovieItemWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, releaseDateMovieItemWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         movieViewHolder.textViewMovieReleaseDate.setText(releaseDateMovieItemWord);
         Spannable releaseDateMovieItem = new SpannableString(mMovieData.get(position).getMovieReleaseDate());
@@ -84,7 +84,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         movieViewHolder.textViewMovieReleaseDate.append(releaseDateMovieItem);
 
         // Set textview content in movie item original language to contain a variety of different colors
-        Spannable languageMovieItemWord = new SpannableString("Language : ");
+        Spannable languageMovieItemWord = new SpannableString(context.getString(R.string.span_movie_item_language));
         languageMovieItemWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, languageMovieItemWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         movieViewHolder.textViewMovieOriginalLanguage.setText(languageMovieItemWord);
         Spannable languageMovieItem = new SpannableString(mMovieData.get(position).getMovieLanguage());

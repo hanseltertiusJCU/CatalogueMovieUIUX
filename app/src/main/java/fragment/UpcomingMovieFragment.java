@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
+import com.example.android.cataloguemovieuiux.MainActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ public class UpcomingMovieFragment extends Fragment implements LoaderManager.Loa
 
         String movieMode = "upComing";
 
+        // Set mode untuk mengoper value ke parameter MovieAsyncTaskLoader
         movieLoader = new MovieAsyncTaskLoader(getContext(), movieMode);
 
         return movieLoader;

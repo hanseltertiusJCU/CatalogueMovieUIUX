@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
+import com.example.android.cataloguemovieuiux.MainActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class NowPlayingMovieFragment extends Fragment implements LoaderManager.L
 
         String movieMode = "nowPlaying";
 
+        // Set mode untuk mengoper value ke parameter MovieAsyncTaskLoader
         movieLoader = new MovieAsyncTaskLoader(getContext(), movieMode);
 
         return movieLoader;

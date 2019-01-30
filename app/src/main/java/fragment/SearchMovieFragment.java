@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
+import com.example.android.cataloguemovieuiux.MainActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
@@ -114,6 +115,7 @@ public class SearchMovieFragment extends Fragment implements LoaderManager.Loade
 
         MovieAsyncTaskLoader movieLoader;
 
+        // Set mode untuk mengoper value ke parameter MovieAsyncTaskLoader
         String movieMode = "search";
 
         String movieResult = "";
