@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name">CatalogueMovieUIUX</string>
+    <!-- Set values for edit text search -->
     <string name="hint_text">Type a movie</string>
     <string name="search_text">Search</string>
+    <!-- Set values for Movie data placeholder -->
     <string name="movie_title_text">Movie Title</string>
     <string name="movie_ratings_text">Ratings</string>
     <string name="movie_release_date_text">Release Date</string>
     <string name="movie_language_text">Language</string>
+    <!-- Set action bar title -->
     <string name="search_movie">Search Movie</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="upcoming">Up Coming</string>
+    <!-- Set Detailed Movie section placeholder -->
     <string name="detailed_movie_rating_text">Detailed Movie Rating Text</string>
     <string name="detailed_movie_status_text">Detailed Movie Status Text</string>
     <string name="detailed_movie_tagline_text">Detailed Movie Tagline Text</string>

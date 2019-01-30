@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import fragment.MovieFragment;
+import fragment.SearchMovieFragment;
 import item.DetailedMovieItems;
 import loader.DetailedMovieAsyncTaskLoader;
 
@@ -58,8 +58,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         textViewDetailedMovieOverview = findViewById(R.id.detailed_movie_overview_text);
 
         // Get intent untuk mendapatkan id dan title dari {@link MainActivity}
-        detailedMovieId = getIntent().getIntExtra(MovieFragment.MOVIE_ID_DATA, 0);
-        detailedMovieTitle = getIntent().getStringExtra(MovieFragment.MOVIE_TITLE_DATA);
+        detailedMovieId = getIntent().getIntExtra(SearchMovieFragment.MOVIE_ID_DATA, 0);
+        detailedMovieTitle = getIntent().getStringExtra(SearchMovieFragment.MOVIE_TITLE_DATA);
 
         // Set layout value untuk dapat menjalankan process loading data
         detailedMovieContentItem = findViewById(R.id.detailed_movie_item);

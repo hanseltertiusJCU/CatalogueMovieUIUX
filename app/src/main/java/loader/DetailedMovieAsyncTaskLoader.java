@@ -18,6 +18,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class DetailedMovieAsyncTaskLoader extends AsyncTaskLoader<ArrayList<DetailedMovieItems>> {
 
+    // Gunakan API Key dari Build Config untuk melindungi credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
     private ArrayList<DetailedMovieItems> mDetailedMovieData;
     private boolean mHasResult = false;

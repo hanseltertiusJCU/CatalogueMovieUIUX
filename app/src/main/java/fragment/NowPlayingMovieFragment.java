@@ -1,23 +1,19 @@
 package fragment;
 
 
-import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
 import com.example.android.cataloguemovieuiux.R;
@@ -32,23 +28,17 @@ import support.MovieItemClickSupport;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MovieItems>> {
-
+public class NowPlayingMovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MovieItems>> {
 
     public static final int LOADER_ID_MOVIE = 101;
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
-    // Key untuk meretrieve search
-    private static final String EXTRAS_MOVIE_SEARCH = "EXTRAS_MOVIE_SEARCH";
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
-    private EditText searchEditText;
-    private Button searchButton;
     private ProgressBar progressBar;
-    private String movieSearch;
 
-    public MovieFragment() {
+    public NowPlayingMovieFragment() {
         // Required empty public constructor
     }
 
@@ -61,11 +51,9 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Assign view yang ada di Fragment
-        searchEditText = view.findViewById(R.id.edit_movie_search);
-        searchButton = view.findViewById(R.id.button_search);
         progressBar = view.findViewById(R.id.progress_bar);
 
         movieAdapter = new MovieAdapter(getContext());
@@ -73,67 +61,28 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
         recyclerView = view.findViewById(R.id.rv_list);
 
-        searchEditText = view.findViewById(R.id.edit_movie_search);
-        searchButton = view.findViewById(R.id.button_search);
-
-        progressBar = view.findViewById(R.id.progress_bar);
-
         // Set visiblity of views ketika sedang dalam meretrieve data
         recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-        searchButton.setOnClickListener(mySearchListener);
-
-        getLoaderManager().initLoader(LOADER_ID_MOVIE, savedInstanceState, MovieFragment.this);
+        getLoaderManager().initLoader(LOADER_ID_MOVIE, savedInstanceState, NowPlayingMovieFragment.this);
     }
 
-    View.OnClickListener mySearchListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            movieSearch = searchEditText.getText().toString();
-
-            // Cek ketika edit textnya itu kosong atau tidak, ketika iya maka program tsb tidak
-            // ngapa-ngapain dengan return nothing
-            if (TextUtils.isEmpty(movieSearch))
-                return;
-
-            // Jika isi dari edit textnya itu tidak kosong, maka kita akan merestart loader untuk
-            // mengaccomodate Search
-            Bundle bundle = new Bundle();
-            bundle.putString(EXTRAS_MOVIE_SEARCH, movieSearch);
-
-            // Ketika kita ngeclick search, maka data akan melakukan loading kembali
-            recyclerView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-
-            // Restart loader karena kita sudah membuat loader di onCreate
-            getLoaderManager().restartLoader(LOADER_ID_MOVIE, bundle, MovieFragment.this);
-        }
-    };
-
+    @NonNull
     @Override
-    public Loader<ArrayList<MovieItems>> onCreateLoader(int id, Bundle args) {
+    public Loader<ArrayList<MovieItems>> onCreateLoader(int i, @Nullable Bundle bundle) {
 
         MovieAsyncTaskLoader movieLoader;
 
-        String movieResult = "";
+        String movieMode = "nowPlaying";
 
-        if (args != null)
-            movieResult = args.getString(EXTRAS_MOVIE_SEARCH);
-
-        // Cek jika movieResult itu tidak ada, jika tidak ada maka kita akan call constructor tanpa
-        // ada parameter tambahan
-        if (movieResult.isEmpty())
-            movieLoader = new MovieAsyncTaskLoader(getContext());
-        else
-            movieLoader = new MovieAsyncTaskLoader(getContext(), movieResult);
-
+        movieLoader = new MovieAsyncTaskLoader(getContext(), movieMode);
 
         return movieLoader;
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<MovieItems>> loader, final ArrayList<MovieItems> movieItems) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<MovieItems>> loader, final ArrayList<MovieItems> movieItems) {
         // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
         // yang menandakan bahwa loadingnya sudah selesai
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -165,7 +114,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<MovieItems>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<MovieItems>> loader) {
         movieAdapter.setData(null);
     }
 }
