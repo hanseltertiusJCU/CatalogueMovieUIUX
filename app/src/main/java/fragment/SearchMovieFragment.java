@@ -3,11 +3,13 @@ package fragment;
 
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -73,6 +75,13 @@ public class SearchMovieFragment extends Fragment implements LoaderManager.Loade
         movieAdapter.notifyDataSetChanged();
 
         recyclerView = view.findViewById(R.id.rv_list);
+
+        // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
+        DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+
+        // Set divider untuk RecyclerView items
+        recyclerView.addItemDecoration(itemDecorator);
 
         searchEditText = view.findViewById(R.id.edit_movie_search);
         searchButton = view.findViewById(R.id.button_search);

@@ -6,14 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.android.cataloguemovieuiux.R;
-
-import fragment.NowPlayingMovieFragment;
-import fragment.SearchMovieFragment;
-import fragment.UpcomingMovieFragment;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
+
+    // Create ArrayList untuk menampung Fragment beserta Title
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<String> mFragmentTitleList = new ArrayList<>();
 
     public MovieSectionsFragmentPagerAdapter(Context context, FragmentManager fragmentManager){
         super(fragmentManager);
@@ -21,37 +22,28 @@ public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     // Method ini menentukan posisi fragment untuk setiap tab
-
     @Override
     public Fragment getItem(int position) {
-        if(position == 0){
-            return new NowPlayingMovieFragment();
-        } else if (position == 1){
-            return new UpcomingMovieFragment();
-        } else {
-            return new SearchMovieFragment();
-        }
+        return mFragmentList.get(position);
     }
 
     // Method ini menentukan berapa banyak tabs yang ada
     @Override
     public int getCount() {
-        return 3;
+        return mFragmentList.size();
+    }
+
+    // Method tsb berguna untuk memasukkan fragment dan title ke ArrayList masing-masing bedasarkan
+    // input parameter yang ada
+    public void addMovieSectionFragment(Fragment fragment, String title){
+        mFragmentList.add(fragment);
+        mFragmentTitleList.add(title);
     }
 
     // Method ini berguna untuk mereturn tab title
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0:
-                return mContext.getString(R.string.now_playing);
-            case 1:
-                return mContext.getString(R.string.upcoming);
-            case 2:
-                return mContext.getString(R.string.search_movie);
-            default:
-                return null;
-        }
+        return mFragmentTitleList.get(position);
     }
 }

@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,6 +63,13 @@ public class NowPlayingMovieFragment extends Fragment implements LoaderManager.L
         movieAdapter.notifyDataSetChanged();
 
         recyclerView = view.findViewById(R.id.rv_list);
+
+        // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
+        DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+
+        // Set divider untuk RecyclerView items
+        recyclerView.addItemDecoration(itemDecorator);
 
         // Set visiblity of views ketika sedang dalam meretrieve data
         recyclerView.setVisibility(View.INVISIBLE);
