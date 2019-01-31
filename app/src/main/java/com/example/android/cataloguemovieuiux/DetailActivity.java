@@ -1,15 +1,20 @@
 package com.example.android.cataloguemovieuiux;
 
 import android.app.LoaderManager;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Loader;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,11 +25,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import factory.DetailedMovieViewModelFactory;
 import fragment.SearchMovieFragment;
 import item.DetailedMovieItems;
 import loader.DetailedMovieAsyncTaskLoader;
+import model.DetailedMovieViewModel;
+import model.NowPlayingViewModel;
 
-public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<DetailedMovieItems>> {
+public class DetailActivity extends AppCompatActivity {
 
     static final int LOADER_ID_SEARCH = 102;
     private ImageView imageViewDetailedPosterImage;
@@ -40,6 +48,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private String detailedMovieTitle;
     private LinearLayout detailedMovieContentItem;
     private ProgressBar detailedProgressBar;
+
+    private DetailedMovieViewModel detailedMovieViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,81 +82,65 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         detailedMovieContentItem.setVisibility(View.INVISIBLE);
         detailedProgressBar.setVisibility(View.VISIBLE);
 
-        // initLoader untuk mentrigger onCreateLoader
-        getLoaderManager().initLoader(LOADER_ID_SEARCH, savedInstanceState, this);
-    }
+        // Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
+        detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
 
-    @Override
-    public Loader<ArrayList<DetailedMovieItems>> onCreateLoader(int i, Bundle bundle) {
-        return new DetailedMovieAsyncTaskLoader(this, detailedMovieId);
-    }
+        final Observer<ArrayList<DetailedMovieItems>> detailedMovieObserver = new Observer<ArrayList<DetailedMovieItems>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<DetailedMovieItems> detailedMovieItems) {
+                // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+                // yang menandakan bahwa loadingnya sudah selesai
+                detailedMovieContentItem.setVisibility(View.VISIBLE);
+                detailedProgressBar.setVisibility(View.GONE);
 
-    // Kita menggunakan detailedMovieItems sebagai parameter karena parameter tsb itu dicarry dari onCreateLoader sebagai isi data
-    @Override
-    public void onLoadFinished(Loader<ArrayList<DetailedMovieItems>> loader, ArrayList<DetailedMovieItems> detailedMovieItems) {
+                // Set semua data ke dalam detail activity
+                // Load image jika ada poster path
+                Picasso.get().load("https://image.tmdb.org/t/p/w185" + detailedMovieItems.get(0).getDetailedMoviePosterPath()).into(imageViewDetailedPosterImage);
 
-        // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-        // yang menandakan bahwa loadingnya sudah selesai
-        detailedMovieContentItem.setVisibility(View.VISIBLE);
-        detailedProgressBar.setVisibility(View.GONE);
+                textViewDetailedMovieTitle.setText(detailedMovieItems.get(0).getDetailedMovieTitle());
 
-        // Set semua data ke dalam detail activity
-        // Load image jika ada poster path
-        Picasso.get().load("https://image.tmdb.org/t/p/w185" + detailedMovieItems.get(0).getDetailedMoviePosterPath()).into(imageViewDetailedPosterImage);
+                textViewDetailedMovieTagline.setText("\"" + detailedMovieItems.get(0).getDetailedMovieTagline() + "\"");
 
-        textViewDetailedMovieTitle.setText(detailedMovieItems.get(0).getDetailedMovieTitle());
+                // Set textview content in detailed movie runtime to contain a variety of different colors
+                Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status));
+                statusWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, statusWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRuntime.setText(statusWord);
+                Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getDetailedMovieStatus());
+                statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, statusDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRuntime.append(statusDetailedMovie);
 
-        textViewDetailedMovieTagline.setText("\"" + detailedMovieItems.get(0).getDetailedMovieTagline() + "\"");
+                // Set textview content in detailed movie rating to contain a variety of different colors
+                Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating));
+                ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRating.setText(ratingWord);
+                Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getDetailedMovieRatings());
+                ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRating.append(ratingDetailedMovie);
 
-        // Set textview content in detailed movie runtime to contain a variety of different colors
-        Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status));
-        statusWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, statusWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRuntime.setText(statusWord);
-        Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getDetailedMovieStatus());
-        statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, statusDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRuntime.append(statusDetailedMovie);
+                Spannable ratingFromWord = new SpannableString(getString(R.string.span_movie_detail_from));
+                ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRating.append(ratingFromWord);
 
-        // Set textview content in detailed movie rating to contain a variety of different colors
-        Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating));
-        ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRating.setText(ratingWord);
-        Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getDetailedMovieRatings());
-        ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRating.append(ratingDetailedMovie);
+                Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getDetailedMovieRatingsVote());
+                ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovieVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRating.append(ratingDetailedMovieVotes);
 
-        Spannable ratingFromWord = new SpannableString(getString(R.string.span_movie_detail_from));
-        ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRating.append(ratingFromWord);
+                Spannable ratingVotesWord = new SpannableString(getString(R.string.span_movie_detail_votes));
+                ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewDetailedMovieRating.append(ratingVotesWord);
 
-        Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getDetailedMovieRatingsVote());
-        ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovieVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRating.append(ratingDetailedMovieVotes);
+                textViewDetailedMovieLanguage.setText(detailedMovieItems.get(0).getDetailedMovieLanguages());
 
-        Spannable ratingVotesWord = new SpannableString(getString(R.string.span_movie_detail_votes));
-        ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textViewDetailedMovieRating.append(ratingVotesWord);
+                textViewDetailedMovieGenres.setText(detailedMovieItems.get(0).getDetailedMovieGenres());
 
-        textViewDetailedMovieLanguage.setText(detailedMovieItems.get(0).getDetailedMovieLanguages());
+                textViewDetailedMovieReleaseDate.setText(detailedMovieItems.get(0).getDetailedMovieReleaseDate());
 
-        textViewDetailedMovieGenres.setText(detailedMovieItems.get(0).getDetailedMovieGenres());
+                textViewDetailedMovieOverview.setText(detailedMovieItems.get(0).getDetailtedMovieOverview());
+            }
+        };
 
-        textViewDetailedMovieReleaseDate.setText(detailedMovieItems.get(0).getDetailedMovieReleaseDate());
-
-        textViewDetailedMovieOverview.setText(detailedMovieItems.get(0).getDetailtedMovieOverview());
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<DetailedMovieItems>> loader) {
-        // Set semua data menjadi null
-        Picasso.get().load((Uri) null).into(imageViewDetailedPosterImage);
-        textViewDetailedMovieTitle.setText(null);
-        textViewDetailedMovieTagline.setText(null);
-        textViewDetailedMovieRuntime.setText(null);
-        textViewDetailedMovieLanguage.setText(null);
-        textViewDetailedMovieGenres.setText(null);
-        textViewDetailedMovieReleaseDate.setText(null);
-        textViewDetailedMovieOverview.setText(null);
+        // Tempelkan Observer ke LiveData object
+        detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
     }
 }
 
