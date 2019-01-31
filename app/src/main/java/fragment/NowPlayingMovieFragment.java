@@ -1,6 +1,10 @@
 package fragment;
 
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.lifecycle.ViewModelStoreOwner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,16 +26,19 @@ import com.example.android.cataloguemovieuiux.MainActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import android.arch.lifecycle.Observer;
 
 import adapter.MovieAdapter;
 import item.MovieItems;
 import loader.MovieAsyncTaskLoader;
+import model.NowPlayingViewModel;
 import support.MovieItemClickSupport;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NowPlayingMovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MovieItems>> {
+public class NowPlayingMovieFragment extends Fragment {
 
     public static final int LOADER_ID_MOVIE = 101;
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
@@ -40,6 +47,8 @@ public class NowPlayingMovieFragment extends Fragment implements LoaderManager.L
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
+
+    private NowPlayingViewModel nowPlayingViewModel;
 
     public NowPlayingMovieFragment() {
         // Required empty public constructor
@@ -74,42 +83,40 @@ public class NowPlayingMovieFragment extends Fragment implements LoaderManager.L
         // Set visiblity of views ketika sedang dalam meretrieve data
         recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-
-        getLoaderManager().initLoader(LOADER_ID_MOVIE, savedInstanceState, NowPlayingMovieFragment.this);
-    }
-
-    @NonNull
-    @Override
-    public Loader<ArrayList<MovieItems>> onCreateLoader(int i, @Nullable Bundle bundle) {
-
-        MovieAsyncTaskLoader movieLoader;
-
-        String movieMode = "nowPlaying";
-
-        // Set mode untuk mengoper value ke parameter MovieAsyncTaskLoader
-        movieLoader = new MovieAsyncTaskLoader(getContext(), movieMode);
-
-        return movieLoader;
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<ArrayList<MovieItems>> loader, final ArrayList<MovieItems> movieItems) {
-        // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-        // yang menandakan bahwa loadingnya sudah selesai
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        movieAdapter.setData(movieItems);
-        recyclerView.setAdapter(movieAdapter);
-        // Set item click listener di dalam recycler view
-        MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
-            // Implement interface method
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Dapatkan ViewModel yang tepat dari ViewModelProviders
+        nowPlayingViewModel = ViewModelProviders.of(this).get(NowPlayingViewModel.class);
+
+        // Buat Observer yang gunanya untuk update UI
+        final Observer<ArrayList<MovieItems>> nowPlayingObserver = new Observer<ArrayList<MovieItems>>() {
+            // onChanged method ini gunanya untuk menggantikan onLoadFinished method dari loader
             @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-                showSelectedMovieItems(movieItems.get(position));
+            public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
+                // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+                // yang menandakan bahwa loadingnya sudah selesai
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                movieAdapter.setData(movieItems);
+                recyclerView.setAdapter(movieAdapter);
+                // Set item click listener di dalam recycler view
+                MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
+                    // Implement interface method
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+                        // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+                        showSelectedMovieItems(movieItems.get(position));
+                    }
+                });
             }
-        });
+        };
+
+        nowPlayingViewModel.getNowPlayingMovies().observe(this, nowPlayingObserver);
     }
 
     private void showSelectedMovieItems(MovieItems movieItems){
@@ -122,10 +129,5 @@ public class NowPlayingMovieFragment extends Fragment implements LoaderManager.L
         intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
         // Start activity tujuan bedasarkan intent object
         startActivity(intentWithMovieIdData);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<ArrayList<MovieItems>> loader) {
-        movieAdapter.setData(null);
     }
 }
