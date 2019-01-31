@@ -116,6 +116,7 @@ public class NowPlayingMovieFragment extends Fragment {
             }
         };
 
+        // Tempelkan Observer ke LiveData object
         nowPlayingViewModel.getNowPlayingMovies().observe(this, nowPlayingObserver);
     }
 
