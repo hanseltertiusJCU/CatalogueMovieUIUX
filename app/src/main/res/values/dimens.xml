@@ -5,4 +5,6 @@
     <dimen name="item_image_margin">8dp</dimen>
     <dimen name="movie_section_title">20sp</dimen>
     <dimen name="movie_detailed_title">24sp</dimen>
+    <dimen name="progress_bar_width">48dp</dimen>
+    <dimen name="progress_bar_height">48dp</dimen>
 </resources>

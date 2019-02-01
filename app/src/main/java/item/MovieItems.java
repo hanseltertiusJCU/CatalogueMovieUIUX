@@ -57,16 +57,8 @@ public class MovieItems {
         }
     }
 
-    public void setMovieTitle(String movieTitle) {
-        this.movieTitle = movieTitle;
-    }
-
     public String getMovieRatings() {
         return movieRatings;
-    }
-
-    public void setMovieRatings(String movieRatings) {
-        this.movieRatings = movieRatings;
     }
 
     public String getMovieReleaseDate() {
@@ -78,10 +70,6 @@ public class MovieItems {
         }
     }
 
-    public void setMovieReleaseDate(String movieReleaseDate) {
-        this.movieReleaseDate = movieReleaseDate;
-    }
-
     public String getMovieLanguage() {
         // Set default value for MovieLanguage if MovieLanguage is null or ""
         if (movieLanguage != null && !movieLanguage.isEmpty()) {
@@ -91,15 +79,7 @@ public class MovieItems {
         }
     }
 
-    public void setMovieLanguage(String movieLanguage) {
-        this.movieLanguage = movieLanguage;
-    }
-
     public String getMoviePosterPath() {
         return moviePosterPath;
-    }
-
-    public void setMoviePosterPath(String moviePosterPath) {
-        this.moviePosterPath = moviePosterPath;
     }
 }

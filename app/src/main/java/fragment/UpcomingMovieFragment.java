@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,6 +117,7 @@ public class UpcomingMovieFragment extends Fragment {
             public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
                 // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
                 upcomingLinearLayoutManager = new LinearLayoutManager(getContext());
+                Log.d("LayoutManagerUpcoming", upcomingLinearLayoutManager.toString());
                 // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
                 recyclerView.setLayoutManager(upcomingLinearLayoutManager);
                 // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar

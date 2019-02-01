@@ -104,10 +104,6 @@ public class DetailedMovieItems {
         }
     }
 
-    public void setDetailedMovieTitle(String detailedMovieTitle) {
-        this.detailedMovieTitle = detailedMovieTitle;
-    }
-
     public String getDetailedMovieTagline() {
         // Set default value for DetailedMovieTagline if DetailedMovieTagline is null or ""
         if (detailedMovieTagline != null && !detailedMovieTagline.isEmpty()) {
@@ -116,10 +112,6 @@ public class DetailedMovieItems {
             return "Tagline Unknown";
         }
 
-    }
-
-    public void setDetailedMovieTagline(String detailedMovieTagline) {
-        this.detailedMovieTagline = detailedMovieTagline;
     }
 
     public String getDetailedMovieStatus() {
@@ -132,40 +124,20 @@ public class DetailedMovieItems {
 
     }
 
-    public void setDetailedMovieStatus(String detailedMovieStatus) {
-        this.detailedMovieStatus = detailedMovieStatus;
-    }
-
     public String getDetailedMovieRatings() {
         return detailedMovieRatings;
-    }
-
-    public void setDetailedMovieRatings(String detailedMovieRatings) {
-        this.detailedMovieRatings = detailedMovieRatings;
     }
 
     public String getDetailedMovieRatingsVote() {
         return detailedMovieRatingsVote;
     }
 
-    public void setDetailedMovieRatingsVote(String detailedMovieRatingsVote) {
-        this.detailedMovieRatingsVote = detailedMovieRatingsVote;
-    }
-
     public String getDetailedMovieLanguages() {
         return detailedMovieLanguages;
     }
 
-    public void setDetailedMovieLanguages(String detailedMovieLanguages) {
-        this.detailedMovieLanguages = detailedMovieLanguages;
-    }
-
     public String getDetailedMovieGenres() {
         return detailedMovieGenres;
-    }
-
-    public void setDetailedMovieGenres(String detailedMovieGenres) {
-        this.detailedMovieGenres = detailedMovieGenres;
     }
 
     public String getDetailedMovieReleaseDate() {
@@ -177,10 +149,6 @@ public class DetailedMovieItems {
         }
     }
 
-    public void setDetailedMovieReleaseDate(String detailedMovieReleaseDate) {
-        this.detailedMovieReleaseDate = detailedMovieReleaseDate;
-    }
-
     public String getDetailtedMovieOverview() {
         // Set default value for DetailedMovieOverview if DetailedMovieOverview is null or ""
         if (detailtedMovieOverview != null && !detailtedMovieOverview.isEmpty()) {
@@ -190,15 +158,7 @@ public class DetailedMovieItems {
         }
     }
 
-    public void setDetailtedMovieOverview(String detailtedMovieOverview) {
-        this.detailtedMovieOverview = detailtedMovieOverview;
-    }
-
     public String getDetailedMoviePosterPath() {
         return detailedMoviePosterPath;
-    }
-
-    public void setDetailedMoviePosterPath(String detailedMoviePosterPath) {
-        this.detailedMoviePosterPath = detailedMoviePosterPath;
     }
 }

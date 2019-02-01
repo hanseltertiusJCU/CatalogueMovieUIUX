@@ -41,6 +41,11 @@ public class SearchViewModel extends AndroidViewModel {
     // todo: Harus ada perubahan value dari sini atau di factory (?)
 
 
+    public void setmMovieSearch(String mMovieSearch) {
+        this.mMovieSearch = mMovieSearch;
+        searchLiveData = new SearchLiveData(getApplication(), mMovieSearch);
+    }
+
     private class SearchLiveData extends LiveData<ArrayList<MovieItems>>{
 
         private final Context context;

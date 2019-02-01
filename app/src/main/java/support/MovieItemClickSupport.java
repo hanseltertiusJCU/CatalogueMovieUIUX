@@ -9,7 +9,6 @@ import com.example.android.cataloguemovieuiux.R;
 public class MovieItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
 
     // Create View.OnClickListener object
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -23,26 +22,12 @@ public class MovieItemClickSupport {
         }
     };
 
-    private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View view) {
-            if(mOnItemLongClickListener != null){
-                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(view);
-                return mOnItemLongClickListener.onItemLongClicked(mRecyclerView, holder.getAdapterPosition(), view);
-            }
-            return false;
-        }
-    };
-
     // Attach on click listener to recyclerview
     private RecyclerView.OnChildAttachStateChangeListener mAttachListener = new RecyclerView.OnChildAttachStateChangeListener() {
         @Override
         public void onChildViewAttachedToWindow(@NonNull View view) {
             if(mOnItemClickListener != null){
                 view.setOnClickListener(mOnClickListener);
-            }
-            if(mOnItemLongClickListener != null){
-                view.setOnLongClickListener(mOnLongClickListener);
             }
         }
 
@@ -81,10 +66,6 @@ public class MovieItemClickSupport {
         this.mOnItemClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
-        this.mOnItemLongClickListener = listener;
-    }
-
     private void detach(RecyclerView view){
         view.removeOnChildAttachStateChangeListener(mAttachListener);
         view.setTag(R.id.movie_item_click_support, null);
@@ -92,9 +73,5 @@ public class MovieItemClickSupport {
 
     public interface OnItemClickListener{
         void onItemClicked(RecyclerView recyclerView, int position, View view);
-    }
-
-    public interface OnItemLongClickListener{
-        boolean onItemLongClicked(RecyclerView recyclerView, int position, View view);
     }
 }
