@@ -116,6 +116,7 @@ public class SearchMovieFragment extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
 
             // todo: Ubah value moviesearch
+
         }
     };
 

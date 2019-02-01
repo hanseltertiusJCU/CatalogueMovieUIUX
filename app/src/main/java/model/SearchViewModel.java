@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -26,12 +27,10 @@ public class SearchViewModel extends AndroidViewModel {
     private String apiKey = BuildConfig.MOVIE_API_KEY;
     private SearchLiveData searchLiveData;
     private String mMovieSearch;
-    private boolean mNoKeywordMovieSearch;
 
     public SearchViewModel(@NonNull Application application, String movieSearch) {
         super(application);
         this.mMovieSearch = movieSearch;
-        this.mNoKeywordMovieSearch = false;
         searchLiveData = new SearchLiveData(application, movieSearch);
     }
 

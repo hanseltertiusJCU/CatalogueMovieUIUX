@@ -1,8 +1,12 @@
 package com.example.android.cataloguemovieuiux;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +25,18 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private MovieSectionsFragmentPagerAdapter movieSectionsFragmentPagerAdapter;
+
+    private TextView tabNowPlaying;
+    private TextView tabUpcoming;
+    private TextView tabSearch;
+
+    private Drawable[] nowPlayingDrawables;
+    private Drawable nowPlayingDrawable;
+    private Drawable[] upcomingDrawables;
+    private Drawable upcomingDrawable;
+    private Drawable[] searchDrawables;
+    private Drawable searchDrawable;
+
 
 
     @Override
@@ -51,11 +67,60 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 setActionBarTitle((String) movieSectionsFragmentPagerAdapter.getPageTitle(position));
+                // Ubah text color dan drawable tint menjadi colorAccent, yang menandakan bahwa itemnya
+                // sedang dipilih
+                switch (position){
+                    case 0:
+                        tabNowPlaying.setTextColor(getResources().getColor(R.color.colorAccent));
+                        nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
+                        nowPlayingDrawable = nowPlayingDrawables[1];
+                        nowPlayingDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        break;
+                    case 1:
+                        tabUpcoming.setTextColor(getResources().getColor(R.color.colorAccent));
+                        upcomingDrawables = tabUpcoming.getCompoundDrawables();
+                        upcomingDrawable = upcomingDrawables[1];
+                        upcomingDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        break;
+                    case 2:
+                        tabSearch.setTextColor(getResources().getColor(R.color.colorAccent));
+                        searchDrawables = tabSearch.getCompoundDrawables();
+                        searchDrawable = searchDrawables[1];
+                        searchDrawable.setTint(getResources().getColor(R.color.colorAccent));
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                int position = tab.getPosition();
+                // Ubah text color dan drawable tint menjadi hitam, yang menandakan bahwa itemnya
+                // sedang tidak dipilih
+                switch (position){
+                    case 0:
+                        tabNowPlaying.setTextColor(getResources().getColor(R.color.color_black));
+                        nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
+                        nowPlayingDrawable = nowPlayingDrawables[1];
+                        nowPlayingDrawable.setTint(getResources().getColor(R.color.color_black));
+                        break;
+                    case 1:
+                        tabUpcoming.setTextColor(getResources().getColor(R.color.color_black));
+                        upcomingDrawables = tabUpcoming.getCompoundDrawables();
+                        upcomingDrawable = upcomingDrawables[1];
+                        upcomingDrawable.setTint(getResources().getColor(R.color.color_black));
+                        break;
+                    case 2:
+                        tabSearch.setTextColor(getResources().getColor(R.color.color_black));
+                        searchDrawables = tabSearch.getCompoundDrawables();
+                        searchDrawable = searchDrawables[1];
+                        searchDrawable.setTint(getResources().getColor(R.color.color_black));
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -68,19 +133,28 @@ public class MainActivity extends AppCompatActivity {
 
     // Method tsb berguna untuk membuat icons beserta isinya di Tab
     private void createTabIcons(){
-        TextView tabNowPlaying = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabNowPlaying = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabNowPlaying.setText(getString(R.string.now_playing));
+        // Set default text color yang menandakan bahwa tabnya itu sedang d select
+        tabNowPlaying.setTextColor(getResources().getColor(R.color.colorAccent));
         // Set icon di atas text
         tabNowPlaying.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_now_playing, 0, 0);
+        // Dapatkan getCompoundDrawable dari setCompoundDrawablesWithIntrinsicBounds
+        nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
+        // Akses drawableTop, which is in this case kita mengakses element ke 2 (index value: 1)
+        nowPlayingDrawable = nowPlayingDrawables[1];
+        // Set default tint untuk drawable yang menandakan bahwa tabnya itu sedang d select
+        nowPlayingDrawable.setTint(getResources().getColor(R.color.colorAccent));
+
         // Inflate custom_tab.xml ke dalam TabLayout
         tabLayout.getTabAt(0).setCustomView(tabNowPlaying);
 
-        TextView tabUpcoming = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabUpcoming = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabUpcoming.setText(getString(R.string.upcoming));
         tabUpcoming.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_upcoming, 0,0);
         tabLayout.getTabAt(1).setCustomView(tabUpcoming);
 
-        TextView tabSearch = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabSearch = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabSearch.setText(getString(R.string.search_movie));
         tabSearch.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_search, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabSearch);
