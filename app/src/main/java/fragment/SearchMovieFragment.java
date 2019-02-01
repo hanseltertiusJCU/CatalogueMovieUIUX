@@ -1,6 +1,10 @@
 package fragment;
 
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.Transformations;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
@@ -22,20 +26,20 @@ import android.widget.ProgressBar;
 
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
-import com.example.android.cataloguemovieuiux.MainActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
 
 import adapter.MovieAdapter;
+import factory.SearchViewModelFactory;
 import item.MovieItems;
-import loader.MovieAsyncTaskLoader;
+import model.SearchViewModel;
 import support.MovieItemClickSupport;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchMovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MovieItems>> {
+public class SearchMovieFragment extends Fragment {
 
 
     public static final int LOADER_ID_MOVIE = 101;
@@ -50,6 +54,8 @@ public class SearchMovieFragment extends Fragment implements LoaderManager.Loade
     private Button searchButton;
     private ProgressBar progressBar;
     private String movieSearch;
+
+    private SearchViewModel searchViewModel;
 
     public SearchMovieFragment() {
         // Required empty public constructor
@@ -92,7 +98,7 @@ public class SearchMovieFragment extends Fragment implements LoaderManager.Loade
 
         searchButton.setOnClickListener(mySearchListener);
 
-        getLoaderManager().initLoader(LOADER_ID_MOVIE, savedInstanceState, SearchMovieFragment.this);
+
     }
 
     View.OnClickListener mySearchListener = new View.OnClickListener() {
@@ -105,62 +111,47 @@ public class SearchMovieFragment extends Fragment implements LoaderManager.Loade
             if (TextUtils.isEmpty(movieSearch))
                 return;
 
-            // Jika isi dari edit textnya itu tidak kosong, maka kita akan merestart loader untuk
-            // mengaccomodate Search
-            Bundle bundle = new Bundle();
-            bundle.putString(EXTRAS_MOVIE_SEARCH, movieSearch);
-
             // Ketika kita ngeclick search, maka data akan melakukan loading kembali
             recyclerView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
 
-            // Restart loader karena kita sudah membuat loader di onCreate
-            getLoaderManager().restartLoader(LOADER_ID_MOVIE, bundle, SearchMovieFragment.this);
+            // todo: Ubah value moviesearch
         }
     };
 
     @Override
-    public Loader<ArrayList<MovieItems>> onCreateLoader(int id, Bundle args) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        MovieAsyncTaskLoader movieLoader;
+        movieSearch = "avenger";
 
-        // Set mode untuk mengoper value ke parameter MovieAsyncTaskLoader
-        String movieMode = "search";
+        // Dapatkan ViewModel yang tepat dari ViewModelProviders
+        searchViewModel = ViewModelProviders.of(this, new SearchViewModelFactory(getActivity().getApplication(), movieSearch)).get(SearchViewModel.class);
 
-        String movieResult = "";
-
-        if (args != null)
-            movieResult = args.getString(EXTRAS_MOVIE_SEARCH);
-
-        // Cek jika movieResult itu tidak ada, jika tidak ada maka kita akan call constructor tanpa
-        // ada parameter tambahan
-        if (movieResult.isEmpty())
-            movieLoader = new MovieAsyncTaskLoader(getContext(), movieMode);
-        else
-            movieLoader = new MovieAsyncTaskLoader(getContext(), movieMode, movieResult);
-
-
-        return movieLoader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ArrayList<MovieItems>> loader, final ArrayList<MovieItems> movieItems) {
-        // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-        // yang menandakan bahwa loadingnya sudah selesai
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        movieAdapter.setData(movieItems);
-        recyclerView.setAdapter(movieAdapter);
-        // Set item click listener di dalam recycler view
-        MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
-            // Implement interface method
+        final Observer<ArrayList<MovieItems>> searchObserver = new Observer<ArrayList<MovieItems>>() {
             @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-                showSelectedMovieItems(movieItems.get(position));
+            public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
+                // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+                // yang menandakan bahwa loadingnya sudah selesai
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                movieAdapter.setData(movieItems);
+                recyclerView.setAdapter(movieAdapter);
+                // Set item click listener di dalam recycler view
+                MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
+                    // Implement interface method
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+                        // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+                        showSelectedMovieItems(movieItems.get(position));
+                    }
+                });
             }
-        });
+        };
+
+        // Tempelkan Observer ke LiveData object
+        searchViewModel.getSearchMovie().observe(this, searchObserver);
     }
 
     private void showSelectedMovieItems(MovieItems movieItems){
@@ -173,10 +164,5 @@ public class SearchMovieFragment extends Fragment implements LoaderManager.Loade
         intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
         // Start activity tujuan bedasarkan intent object
         startActivity(intentWithMovieIdData);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<MovieItems>> loader) {
-        movieAdapter.setData(null);
     }
 }

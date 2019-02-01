@@ -31,7 +31,6 @@ import android.arch.lifecycle.Observer;
 
 import adapter.MovieAdapter;
 import item.MovieItems;
-import loader.MovieAsyncTaskLoader;
 import model.NowPlayingViewModel;
 import support.MovieItemClickSupport;
 

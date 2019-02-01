@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import factory.DetailedMovieViewModelFactory;
 import fragment.SearchMovieFragment;
 import item.DetailedMovieItems;
-import loader.DetailedMovieAsyncTaskLoader;
 import model.DetailedMovieViewModel;
 import model.NowPlayingViewModel;
 

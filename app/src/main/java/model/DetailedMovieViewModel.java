@@ -95,8 +95,8 @@ public class DetailedMovieViewModel extends AndroidViewModel{
                 }
 
                 @Override
-                protected void onPostExecute(ArrayList<DetailedMovieItems> movieItems) {
-                    setValue(movieItems);
+                protected void onPostExecute(ArrayList<DetailedMovieItems> detailedMovieItems) {
+                    setValue(detailedMovieItems);
                 }
             }.execute();
         }
