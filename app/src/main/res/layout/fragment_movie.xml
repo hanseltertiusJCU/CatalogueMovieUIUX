@@ -13,21 +13,46 @@
         android:orientation="vertical"
         tools:context=".MovieFragment">
 
-        <!-- Harus pasang divider sm touch feedback -->
+        <LinearLayout
+            android:id="@+id/search_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/border"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_movie_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/item_image_margin"
+                android:hint="@string/hint_text"
+                />
+
+            <Button
+                android:id="@+id/button_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@color/color_button"
+                android:textColor="@color/color_white"
+                android:layout_margin="@dimen/item_image_margin"
+                android:text="@string/search_text" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/movie_items" />
-
-        <!--<ListView-->
-        <!--android:id="@+id/listView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:divider="@android:color/transparent"-->
-        <!--android:dividerHeight="@dimen/activity_vertical_margin"-->
-        <!--android:drawSelectorOnTop="true"/>-->
+            tools:listitem="@layout/movie_items"
+            android:scrollbars="vertical"
+            android:background="?attr/selectableItemBackground"/>
 
     </LinearLayout>
 

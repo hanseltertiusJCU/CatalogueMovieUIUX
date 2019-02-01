@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.arch.lifecycle.ViewModelStoreOwner;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
@@ -39,15 +41,22 @@ import support.MovieItemClickSupport;
  */
 public class NowPlayingMovieFragment extends Fragment {
 
-    public static final int LOADER_ID_MOVIE = 101;
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
+    private LinearLayout searchLayout;
 
     private NowPlayingViewModel nowPlayingViewModel;
+
+    // Bikin constant (key) yang merepresent Parcelable object
+    private static final String MOVIE_LIST_STATE = "movieListState";
+    // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
+    private Parcelable mNowPlayingListState = null;
+    // Bikin linearlayout manager untuk dapat call onsaveinstancestate method
+    private LinearLayoutManager nowPlayingLinearLayoutManager;
 
     public NowPlayingMovieFragment() {
         // Required empty public constructor
@@ -72,6 +81,9 @@ public class NowPlayingMovieFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_list);
 
+        searchLayout = view.findViewById(R.id.search_menu);
+        searchLayout.setVisibility(View.GONE);
+
         // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
@@ -87,6 +99,13 @@ public class NowPlayingMovieFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
+        // list/item positions (scroll position)
+        if(savedInstanceState != null) {
+            mNowPlayingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
+        }
+
         // Dapatkan ViewModel yang tepat dari ViewModelProviders
         nowPlayingViewModel = ViewModelProviders.of(this).get(NowPlayingViewModel.class);
 
@@ -95,8 +114,10 @@ public class NowPlayingMovieFragment extends Fragment {
             // onChanged method ini gunanya untuk menggantikan onLoadFinished method dari loader
             @Override
             public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
+                // Create LinearLayoutManager object
+                nowPlayingLinearLayoutManager = new LinearLayoutManager(getContext());
                 // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(nowPlayingLinearLayoutManager);
                 // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
                 // yang menandakan bahwa loadingnya sudah selesai
                 recyclerView.setVisibility(View.VISIBLE);
@@ -130,4 +151,26 @@ public class NowPlayingMovieFragment extends Fragment {
         // Start activity tujuan bedasarkan intent object
         startActivity(intentWithMovieIdData);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
+        // Parcelable sebagai input parameter
+        if (mNowPlayingListState != null) {
+            nowPlayingLinearLayoutManager.onRestoreInstanceState(mNowPlayingListState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(nowPlayingLinearLayoutManager != null){
+            // Save list state/ scroll position dari list
+            mNowPlayingListState = nowPlayingLinearLayoutManager.onSaveInstanceState();
+            outState.putParcelable(MOVIE_LIST_STATE, mNowPlayingListState);
+        }
+
+    }
+
 }

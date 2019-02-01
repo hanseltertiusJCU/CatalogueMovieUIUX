@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
@@ -46,8 +47,6 @@ public class SearchMovieFragment extends Fragment {
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
-    // Key untuk meretrieve search
-    private static final String EXTRAS_MOVIE_SEARCH = "EXTRAS_MOVIE_SEARCH";
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private EditText searchEditText;
@@ -56,6 +55,14 @@ public class SearchMovieFragment extends Fragment {
     private String movieSearch;
 
     private SearchViewModel searchViewModel;
+
+    // Bikin constant (key) yang merepresent Parcelable object
+    private static final String MOVIE_LIST_STATE = "movieListState";
+    // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
+    private Parcelable mSearchListState = null;
+    // Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
+    private LinearLayoutManager searchLinearLayoutManager;
+
 
     public SearchMovieFragment() {
         // Required empty public constructor
@@ -66,7 +73,7 @@ public class SearchMovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_movie, container, false);
+        return inflater.inflate(R.layout.fragment_movie, container, false);
     }
 
     @Override
@@ -124,6 +131,12 @@ public class SearchMovieFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
+        // list/item positions (scroll position)
+        if(savedInstanceState != null) {
+            mSearchListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
+        }
+
         movieSearch = "avenger";
 
         // Dapatkan ViewModel yang tepat dari ViewModelProviders
@@ -132,9 +145,12 @@ public class SearchMovieFragment extends Fragment {
         final Observer<ArrayList<MovieItems>> searchObserver = new Observer<ArrayList<MovieItems>>() {
             @Override
             public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
+                // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
+                searchLinearLayoutManager = new LinearLayoutManager(getContext());
+                // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
+                recyclerView.setLayoutManager(searchLinearLayoutManager);
                 // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
                 // yang menandakan bahwa loadingnya sudah selesai
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 movieAdapter.setData(movieItems);
@@ -165,5 +181,25 @@ public class SearchMovieFragment extends Fragment {
         intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
         // Start activity tujuan bedasarkan intent object
         startActivity(intentWithMovieIdData);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
+        // Parcelable sebagai input parameter
+        if (mSearchListState != null) {
+            searchLinearLayoutManager.onRestoreInstanceState(mSearchListState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(searchLinearLayoutManager != null){
+            // Save list state/scroll position dari list
+            mSearchListState = searchLinearLayoutManager.onSaveInstanceState();
+            outState.putParcelable(MOVIE_LIST_STATE, mSearchListState);
+        }
     }
 }

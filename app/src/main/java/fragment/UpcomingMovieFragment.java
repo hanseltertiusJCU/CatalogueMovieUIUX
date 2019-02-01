@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,8 +47,16 @@ public class UpcomingMovieFragment extends Fragment {
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
+    private LinearLayout searchLayout;
 
     private UpcomingViewModel upcomingViewModel;
+
+    // Bikin constant (key) yang merepresent Parcelable object
+    private static final String MOVIE_LIST_STATE = "movieListState";
+    // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
+    private Parcelable mUpcomingListState = null;
+    // Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
+    private LinearLayoutManager upcomingLinearLayoutManager;
 
     public UpcomingMovieFragment() {
         // Required empty public constructor
@@ -72,6 +82,9 @@ public class UpcomingMovieFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_list);
 
+        searchLayout = view.findViewById(R.id.search_menu);
+        searchLayout.setVisibility(View.GONE);
+
         // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
@@ -87,6 +100,13 @@ public class UpcomingMovieFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
+        // list/item positions (scroll position)
+        if(savedInstanceState != null) {
+            mUpcomingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
+        }
+
         // Dapatkan ViewModel yang tepat dari ViewModelProviders
         upcomingViewModel = ViewModelProviders.of(this).get(UpcomingViewModel.class);
 
@@ -94,8 +114,10 @@ public class UpcomingMovieFragment extends Fragment {
         final Observer<ArrayList<MovieItems>> upcomingObserver = new Observer<ArrayList<MovieItems>>() {
             @Override
             public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
+                // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
+                upcomingLinearLayoutManager = new LinearLayoutManager(getContext());
                 // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(upcomingLinearLayoutManager);
                 // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
                 // yang menandakan bahwa loadingnya sudah selesai
                 recyclerView.setVisibility(View.VISIBLE);
@@ -128,5 +150,25 @@ public class UpcomingMovieFragment extends Fragment {
         intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
         // Start activity tujuan bedasarkan intent object
         startActivity(intentWithMovieIdData);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
+        // Parcelable sebagai input parameter
+        if (mUpcomingListState != null) {
+            upcomingLinearLayoutManager.onRestoreInstanceState(mUpcomingListState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(upcomingLinearLayoutManager != null){
+            // Save list state/scroll position dari list
+            mUpcomingListState = upcomingLinearLayoutManager.onSaveInstanceState();
+            outState.putParcelable(MOVIE_LIST_STATE, mUpcomingListState);
+        }
     }
 }

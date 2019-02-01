@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private Drawable[] searchDrawables;
     private Drawable searchDrawable;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         // Dapatkan getCompoundDrawable dari setCompoundDrawablesWithIntrinsicBounds
         nowPlayingDrawables = tabNowPlaying.getCompoundDrawables();
         // Akses drawableTop, which is in this case kita mengakses element ke 2 (index value: 1)
+        // dari Drawable[]
         nowPlayingDrawable = nowPlayingDrawables[1];
         // Set default tint untuk drawable yang menandakan bahwa tabnya itu sedang d select
         nowPlayingDrawable.setTint(getResources().getColor(R.color.colorAccent));
