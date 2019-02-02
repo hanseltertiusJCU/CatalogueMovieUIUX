@@ -21,8 +21,12 @@ import item.DetailedMovieItems;
 
 public class DetailedMovieViewModel extends AndroidViewModel{
 
-    // Gunakan API Key dari Build Config untuk melindungi credential
+    // Gunakan Build Config untuk melindungi credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String detailedUrlBase = BuildConfig.BASE_MOVIE_DETAILED_URL;
+    private String apiKeyFiller = BuildConfig.DETAILED_MOVIE_API_KEY_FILLER;
+
+
     private DetailedMovieLiveData detailedMovieLiveData;
 
     private int mDetailedMovieId;
@@ -62,7 +66,7 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 
                     final ArrayList<DetailedMovieItems> detailedMovieItemses = new ArrayList<>();
 
-                    String detailedMovieUrl = "https://api.themoviedb.org/3/movie/" + mDetailedMovieId + "?api_key=" + apiKey;
+                    String detailedMovieUrl = detailedUrlBase + mDetailedMovieId + apiKeyFiller + apiKey;
 
                     syncHttpClient.get(detailedMovieUrl, new AsyncHttpResponseHandler() {
 

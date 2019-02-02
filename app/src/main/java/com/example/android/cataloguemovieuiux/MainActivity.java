@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         // Create FragmentPagerAdapter untuk mengetahui fragment mana yg di show
         movieSectionsFragmentPagerAdapter = new MovieSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
 
-        // Tambahkan fragment beserta title ke FragmentPagerAdapter
+        // Tambahkan fragment beserta title ke FragmentPagerAdapter, method tsb adalah
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new NowPlayingMovieFragment(), getString(R.string.now_playing));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new UpcomingMovieFragment(), getString(R.string.upcoming));
         movieSectionsFragmentPagerAdapter.addMovieSectionFragment(new SearchMovieFragment(), getString(R.string.search_movie));

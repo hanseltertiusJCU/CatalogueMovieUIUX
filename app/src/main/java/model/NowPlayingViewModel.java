@@ -25,8 +25,10 @@ public class NowPlayingViewModel extends AndroidViewModel {
     // Create object yang mengextend LiveData<ArrayList<MovieItems>>
     private NowPlayingMovieLiveData nowPlayingMovieLiveData;
 
-    // API key diakses dari BuildConfig untuk menjaga credential
+    // akses informasi penting dari BuildConfig untuk menjaga credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String nowPlayingUrlBase = BuildConfig.BASE_MOVIE_NOW_PLAYING_URL;
+    private String languageUs = BuildConfig.LANGUAGE_US;
 
     // Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItems>
     public LiveData<ArrayList<MovieItems>> getNowPlayingMovies(){
@@ -62,7 +64,7 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
                     final ArrayList<MovieItems> movieItemses = new ArrayList<>();
 
-                    String nowPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + apiKey + "&language=en-US";
+                    String nowPlayingUrl = nowPlayingUrlBase + apiKey + languageUs;
                     syncHttpClient.get(nowPlayingUrl, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

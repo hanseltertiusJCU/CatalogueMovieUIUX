@@ -25,8 +25,10 @@ public class UpcomingViewModel extends AndroidViewModel {
     // Create object yang mengextend LiveData<ArrayList<MovieItems>>
     private UpcomingMovieLiveData upcomingMovieLiveData;
 
-    // API key diakses dari BuildConfig untuk menjaga credential
+    // Beberapa informasi diakses dari BuildConfig untuk menjaga credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String upcomingUrlBase = BuildConfig.BASE_MOVIE_UPCOMING_URL;
+    private String languageUs = BuildConfig.LANGUAGE_US;
 
     // Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItems>
     public LiveData<ArrayList<MovieItems>> getUpcomingMovies(){
@@ -62,7 +64,7 @@ public class UpcomingViewModel extends AndroidViewModel {
 
                     final ArrayList<MovieItems> movieItemses = new ArrayList<>();
 
-                    String upcomingUrl = "https://api.themoviedb.org/3/movie/upcoming?api_key=" + apiKey + "&language=en-US";
+                    String upcomingUrl = upcomingUrlBase + apiKey + languageUs;
                     syncHttpClient.get(upcomingUrl, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

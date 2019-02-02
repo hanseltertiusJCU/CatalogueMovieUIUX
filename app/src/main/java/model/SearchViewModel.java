@@ -22,8 +22,11 @@ import item.MovieItems;
 
 public class SearchViewModel extends AndroidViewModel {
 
-    // Gunakan API Key dari Build Config untuk melindungi credential
+    // Gunakan beberapa informasi dari Build Config untuk melindungi credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
+    private String searchUrlBase = BuildConfig.BASE_MOVIE_SEARCH_URL;
+    private String movieSearchQuery = BuildConfig.MOVIE_SEARCH_QUERY;
+
     private SearchLiveData searchLiveData;
     private String mMovieSearch;
 
@@ -70,7 +73,7 @@ public class SearchViewModel extends AndroidViewModel {
 
                     final ArrayList<MovieItems> movieItemses = new ArrayList<>();
 
-                        String searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=" + apiKey + "&query=" + mMovieSearch;
+                        String searchUrl = searchUrlBase + apiKey + movieSearchQuery + mMovieSearch;
                         syncHttpClient.get(searchUrl, new AsyncHttpResponseHandler() {
 
                             @Override
