@@ -54,6 +54,8 @@ public class SearchMovieFragment extends Fragment {
 
     private SearchViewModel searchViewModel;
 
+    private Observer<ArrayList<MovieItems>> searchObserver;
+
     // Bikin constant (key) yang merepresent Parcelable object
     private static final String MOVIE_LIST_STATE = "movieListState";
     // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
@@ -86,6 +88,9 @@ public class SearchMovieFragment extends Fragment {
         movieAdapter.notifyDataSetChanged();
 
         recyclerView = view.findViewById(R.id.rv_list);
+
+        // Set background color untuk RecyclerView
+        recyclerView.setBackgroundColor(getResources().getColor(R.color.color_white));
 
         // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
@@ -123,32 +128,11 @@ public class SearchMovieFragment extends Fragment {
             // Call setter method untuk merubah value parameter di ViewModel
             searchViewModel.setmMovieSearch(movieSearch);
 
+            // Recall live data
+            searchViewModel.recall();
+
             // Buat Observer object untuk dapat merespon changes dengan mengupdate UI
-            final Observer<ArrayList<MovieItems>> searchObserver = new Observer<ArrayList<MovieItems>>() {
-                @Override
-                public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
-                    // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-                    searchLinearLayoutManager = new LinearLayoutManager(getContext());
-                    Log.d("LayoutManagerSearch", searchLinearLayoutManager.toString());
-                    // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-                    recyclerView.setLayoutManager(searchLinearLayoutManager);
-                    // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-                    // yang menandakan bahwa loadingnya sudah selesai
-                    recyclerView.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                    movieAdapter.setData(movieItems);
-                    recyclerView.setAdapter(movieAdapter);
-                    // Set item click listener di dalam recycler view
-                    MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
-                        // Implement interface method
-                        @Override
-                        public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                            // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-                            showSelectedMovieItems(movieItems.get(position));
-                        }
-                    });
-                }
-            };
+            searchObserver = createObserver();
 
             // Tempelkan Observer ke LiveData object
             searchViewModel.getSearchMovie().observe(SearchMovieFragment.this, searchObserver);
@@ -172,31 +156,7 @@ public class SearchMovieFragment extends Fragment {
         // Dapatkan ViewModel yang tepat dari ViewModelProviders
         searchViewModel = ViewModelProviders.of(this, new SearchViewModelFactory(getActivity().getApplication(), movieSearch)).get(SearchViewModel.class);
 
-        final Observer<ArrayList<MovieItems>> searchObserver = new Observer<ArrayList<MovieItems>>() {
-            @Override
-            public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
-                // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-                searchLinearLayoutManager = new LinearLayoutManager(getContext());
-                Log.d("LayoutManagerSearch", searchLinearLayoutManager.toString());
-                // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-                recyclerView.setLayoutManager(searchLinearLayoutManager);
-                // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-                // yang menandakan bahwa loadingnya sudah selesai
-                recyclerView.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-                movieAdapter.setData(movieItems);
-                recyclerView.setAdapter(movieAdapter);
-                // Set item click listener di dalam recycler view
-                MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
-                    // Implement interface method
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                        // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-                        showSelectedMovieItems(movieItems.get(position));
-                    }
-                });
-            }
-        };
+        searchObserver = createObserver();
 
         // Tempelkan Observer ke LiveData object
         searchViewModel.getSearchMovie().observe(this, searchObserver);
@@ -227,10 +187,41 @@ public class SearchMovieFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        // Cek jika searchLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
+        // di onSaveInstanceState
         if(searchLinearLayoutManager != null){
             // Save list state/scroll position dari list
             mSearchListState = searchLinearLayoutManager.onSaveInstanceState();
             outState.putParcelable(MOVIE_LIST_STATE, mSearchListState);
         }
+    }
+
+    // Method tsb berguna untuk membuat observer
+    public Observer<ArrayList<MovieItems>> createObserver(){
+        Observer<ArrayList<MovieItems>> observer = new Observer<ArrayList<MovieItems>>() {
+            @Override
+            public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {
+                // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
+                searchLinearLayoutManager = new LinearLayoutManager(getContext());
+                // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
+                recyclerView.setLayoutManager(searchLinearLayoutManager);
+                // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+                // yang menandakan bahwa loadingnya sudah selesai
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                movieAdapter.setData(movieItems);
+                recyclerView.setAdapter(movieAdapter);
+                // Set item click listener di dalam recycler view
+                MovieItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new MovieItemClickSupport.OnItemClickListener() {
+                    // Implement interface method
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+                        // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+                        showSelectedMovieItems(movieItems.get(position));
+                    }
+                });
+            }
+        };
+        return observer;
     }
 }

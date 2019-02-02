@@ -6,6 +6,8 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
         // Create ViewPager untuk swipe Fragments
         viewPager = (ViewPager) findViewById(R.id.movie_viewPager);
 
+        // Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
+        // fragment ketika sebuah fragment sedang tidak di display.
+        // Kita menggunakan value 2 sebagai parameter karena kita punya 3 fragments, dan kita
+        // hanya butuh simpan 2 fragments (1 lg untuk display).
+        viewPager.setOffscreenPageLimit(2);
+
+        // Panggil method tsb untuk membuat fragment yang akan disimpan ke ViewPager
         createViewPagerContent(viewPager);
 
         // Assign TabLayout
@@ -119,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         break;
                 }
+
             }
 
             @Override
@@ -194,5 +204,7 @@ public class MainActivity extends AppCompatActivity {
         // Gunakan getSupportActionBar untuk backward compatibility
         getSupportActionBar().setTitle(title);
     }
+
+
 
 }

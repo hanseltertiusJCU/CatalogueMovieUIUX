@@ -43,6 +43,9 @@ public class SearchViewModel extends AndroidViewModel {
 
     public void setmMovieSearch(String mMovieSearch) {
         this.mMovieSearch = mMovieSearch;
+    }
+
+    public void recall(){
         // Panggil live data dengan search keyword yang baru
         searchLiveData = new SearchLiveData(getApplication(), mMovieSearch);
     }

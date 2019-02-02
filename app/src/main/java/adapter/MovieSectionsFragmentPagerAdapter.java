@@ -21,7 +21,7 @@ public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
     }
 
-    // Method ini menentukan posisi fragment untuk setiap tab
+    // Method ini menentukan posisi fragment untuk setiap tab (mungkin bwt pemanggilan fragment)
     @Override
     public Fragment getItem(int position) {
         return mFragmentList.get(position);
