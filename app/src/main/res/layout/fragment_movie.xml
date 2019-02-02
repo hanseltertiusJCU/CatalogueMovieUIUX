@@ -25,24 +25,12 @@
 
             <EditText
                 android:id="@+id/edit_movie_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/item_image_margin"
-                android:hint="@string/hint_text"
-                />
+                style="@style/SearchEditText"
+                android:hint="@string/hint_text"/>
 
             <Button
                 android:id="@+id/button_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:background="@color/color_button"
-                android:textColor="@color/color_white"
-                android:layout_margin="@dimen/item_image_margin"
-                android:text="@string/search_text" />
+                style="@style/SearchButton"/>
 
         </LinearLayout>
 
@@ -58,9 +46,6 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="@dimen/progress_bar_width"
-        android:layout_height="@dimen/progress_bar_height"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        style="@style/ProgressBar"/>
 
 </RelativeLayout>

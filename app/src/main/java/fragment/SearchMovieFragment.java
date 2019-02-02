@@ -120,9 +120,10 @@ public class SearchMovieFragment extends Fragment {
             recyclerView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
 
-            
+            // Call setter method untuk merubah value parameter di ViewModel
             searchViewModel.setmMovieSearch(movieSearch);
 
+            // Buat Observer object untuk dapat merespon changes dengan mengupdate UI
             final Observer<ArrayList<MovieItems>> searchObserver = new Observer<ArrayList<MovieItems>>() {
                 @Override
                 public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {

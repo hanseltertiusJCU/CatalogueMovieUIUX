@@ -12,4 +12,59 @@
         <item name="android:color">@color/color_button</item>
     </style>
 
+    <style name="ProgressBar">
+        <item name="android:layout_width">@dimen/progress_bar_width</item>
+        <item name="android:layout_height">@dimen/progress_bar_height</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="TextTab">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/color_black</item>
+    </style>
+    
+    <style name="SearchEditText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.8</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/inner_view_margin</item>
+    </style>
+    
+    <style name="SearchButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.2</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:background">@color/color_button</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:layout_margin">@dimen/inner_view_margin</item>
+        <item name="android:text">@string/search_text</item>
+    </style>
+    
+    <style name="DetailedMovieText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.25</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="DetailedMovieScrollViewTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/movie_section_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_title</item>
+    </style>
+
+    <style name="DetailedMovieScrollViewContentText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_black</item>
+    </style>
+
 </resources>

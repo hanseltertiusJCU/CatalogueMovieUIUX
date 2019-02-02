@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -38,11 +37,10 @@ public class SearchViewModel extends AndroidViewModel {
         return searchLiveData;
     }
 
-    // todo: Harus ada perubahan value dari sini atau di factory (?)
-
 
     public void setmMovieSearch(String mMovieSearch) {
         this.mMovieSearch = mMovieSearch;
+        // Panggil live data dengan search keyword yang baru
         searchLiveData = new SearchLiveData(getApplication(), mMovieSearch);
     }
 

@@ -36,12 +36,8 @@
 
                 <TextView
                     android:id="@+id/detailed_movie_title_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
+                    style="@style/DetailedMovieText"
                     tools:text="@string/detailed_movie_title_text"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:textSize="@dimen/movie_detailed_title"
                     android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
@@ -49,32 +45,20 @@
 
                 <TextView
                     android:id="@+id/detailed_movie_tagline_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
+                    style="@style/DetailedMovieText"
                     tools:text="@string/detailed_movie_tagline_text"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:textColor="@color/color_black"/>
 
                 <TextView
                     android:id="@+id/detailed_movie_status_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
+                    style="@style/DetailedMovieText"
                     tools:text="@string/detailed_movie_status_text"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:textColor="@color/color_black"/>
 
                 <TextView
                     android:id="@+id/detailed_movie_rating_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
+                    style="@style/DetailedMovieText"
                     tools:text="@string/detailed_movie_rating_text"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:textColor="@color/color_black"/>
 
@@ -92,64 +76,41 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/languages_title"
-                    android:textSize="@dimen/movie_section_title"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_title"/>
+                    style="@style/DetailedMovieScrollViewTitleText"
+                    android:text="@string/languages_title"/>
 
                 <TextView
                     android:id="@+id/detailed_movie_languages_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="@string/detailed_movie_languages_text"
-                    android:textColor="@color/color_black"/>
+                    style="@style/DetailedMovieScrollViewContentText"
+                    tools:text="@string/detailed_movie_languages_text"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/DetailedMovieScrollViewTitleText"
                     android:text="@string/genres_title"
-                    android:textSize="@dimen/movie_section_title"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_title"/>
+                    />
 
                 <TextView
                     android:id="@+id/detailed_movie_genres_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="@string/detailed_movie_genres_text"
-                    android:textColor="@color/color_black"/>
+                    style="@style/DetailedMovieScrollViewContentText"
+                    tools:text="@string/detailed_movie_genres_text"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/release_date_title"
-                    android:textSize="@dimen/movie_section_title"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_title"/>
+                    style="@style/DetailedMovieScrollViewTitleText"
+                    android:text="@string/release_date_title"/>
 
                 <TextView
                     android:id="@+id/detailed_movie_release_date_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="@string/detailed_movie_release_date_text"
-                    android:textColor="@color/colorAccent"/>
+                    style="@style/DetailedMovieScrollViewContentText"
+                    tools:text="@string/detailed_movie_release_date_text"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/overview_title"
-                    android:textSize="@dimen/movie_section_title"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_title"/>
+                    style="@style/DetailedMovieScrollViewTitleText"
+                    android:text="@string/overview_title"/>
 
                 <TextView
                     android:id="@+id/detailed_movie_overview_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="@string/detailed_movie_overview_text"
-                    android:textColor="@color/color_black"/>
+                    style="@style/DetailedMovieScrollViewContentText"
+                    tools:text="@string/detailed_movie_overview_text"/>
 
             </LinearLayout>
 
@@ -159,9 +120,6 @@
 
     <ProgressBar
         android:id="@+id/detailed_progress_bar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        style="@style/ProgressBar"/>
 
 </RelativeLayout>
