@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 import item.DetailedMovieItems;
 
-public class DetailedMovieViewModel extends AndroidViewModel{
+public class DetailedMovieViewModel extends AndroidViewModel {
 
     // Gunakan Build Config untuk melindungi credential
     private String apiKey = BuildConfig.MOVIE_API_KEY;
@@ -31,10 +31,6 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 
     private int mDetailedMovieId;
 
-    public LiveData<ArrayList<DetailedMovieItems>> getDetailedMovie(){
-        return detailedMovieLiveData;
-    }
-
     public DetailedMovieViewModel(@NonNull Application application, int detailedMovieId) {
         super(application);
         this.mDetailedMovieId = detailedMovieId;
@@ -42,13 +38,16 @@ public class DetailedMovieViewModel extends AndroidViewModel{
         detailedMovieLiveData = new DetailedMovieLiveData(application, detailedMovieId);
     }
 
+    public LiveData<ArrayList<DetailedMovieItems>> getDetailedMovie() {
+        return detailedMovieLiveData;
+    }
 
     private class DetailedMovieLiveData extends LiveData<ArrayList<DetailedMovieItems>> {
         private final Context context;
         private final int id;
 
         // Buat constructor untuk mengakomodasi parameter yang ada dari {@link DetailedMovieViewModel}
-        public DetailedMovieLiveData(Context context, int id){
+        public DetailedMovieLiveData(Context context, int id) {
             this.context = context;
             this.id = id;
             loadDetailedMovieLiveData();
@@ -57,7 +56,7 @@ public class DetailedMovieViewModel extends AndroidViewModel{
         @SuppressLint("StaticFieldLeak")
         private void loadDetailedMovieLiveData() {
 
-            new AsyncTask<Void, Void, ArrayList<DetailedMovieItems>>(){
+            new AsyncTask<Void, Void, ArrayList<DetailedMovieItems>>() {
 
                 @Override
                 protected ArrayList<DetailedMovieItems> doInBackground(Void... voids) {
@@ -100,9 +99,11 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 
                 @Override
                 protected void onPostExecute(ArrayList<DetailedMovieItems> detailedMovieItems) {
+                    // Set value dari Observer yang berisi ArrayList yang merupakan
+                    // hasil dari doInBackground method
                     setValue(detailedMovieItems);
                 }
-            }.execute();
+            }.execute(); // Execute AsyncTask
         }
 
 

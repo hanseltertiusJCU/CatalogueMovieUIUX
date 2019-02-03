@@ -25,7 +25,7 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textColor">@color/color_black</item>
     </style>
-    
+
     <style name="SearchEditText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -33,7 +33,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/inner_view_margin</item>
     </style>
-    
+
     <style name="SearchButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -44,7 +44,7 @@
         <item name="android:layout_margin">@dimen/inner_view_margin</item>
         <item name="android:text">@string/search_text</item>
     </style>
-    
+
     <style name="DetailedMovieText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

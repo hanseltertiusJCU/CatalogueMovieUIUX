@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.cataloguemovieuiux.BuildConfig;
 import com.example.android.cataloguemovieuiux.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,16 +27,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private ArrayList<MovieItems> mMovieData = new ArrayList<>();
     private Context context;
 
+    // Gunakan BuildConfig untuk menjaga credential
+    private String baseImageUrl = BuildConfig.IMAGE_MOVIE_URL;
+
     public MovieAdapter(Context context) {
         this.context = context;
     }
 
     public ArrayList<MovieItems> getmMovieData() {
         return mMovieData;
-    }
-
-    public void setmMovieData(ArrayList<MovieItems> mMovieData) {
-        this.mMovieData = mMovieData;
     }
 
     public Context getContext() {
@@ -48,7 +48,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         // dpt ditampilkan pada ListView yg berisi adapter yg berkaitan dengan ListView
         notifyDataSetChanged();
     }
-
 
     @NonNull
     @Override
@@ -63,7 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int position) {
         // Load image jika ada poster path
-        Picasso.get().load("https://image.tmdb.org/t/p/w185" + mMovieData.get(position).getMoviePosterPath()).into(movieViewHolder.imageViewMoviePoster);
+        Picasso.get().load(baseImageUrl + mMovieData.get(position).getMoviePosterPath()).into(movieViewHolder.imageViewMoviePoster);
 
         movieViewHolder.textViewMovieTitle.setText(mMovieData.get(position).getMovieTitle());
 

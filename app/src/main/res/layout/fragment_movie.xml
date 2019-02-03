@@ -1,11 +1,10 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,20 +16,20 @@
             android:id="@+id/search_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/border"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edit_movie_search"
                 style="@style/SearchEditText"
-                android:hint="@string/hint_text"/>
+                android:hint="@string/hint_text" />
 
             <Button
                 android:id="@+id/button_search"
-                style="@style/SearchButton"/>
+                style="@style/SearchButton" />
 
         </LinearLayout>
 
@@ -38,14 +37,14 @@
             android:id="@+id/rv_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/movie_items"
+            android:background="?attr/selectableItemBackground"
             android:scrollbars="vertical"
-            android:background="?attr/selectableItemBackground"/>
+            tools:listitem="@layout/movie_items" />
 
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        style="@style/ProgressBar"/>
+        style="@style/ProgressBar" />
 
 </RelativeLayout>

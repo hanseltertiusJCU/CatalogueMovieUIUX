@@ -13,7 +13,7 @@ public class DetailedMovieViewModelFactory implements ViewModelProvider.Factory 
     private Application mApplication;
     private int mMovieId;
 
-    public DetailedMovieViewModelFactory(Application application, int movieId){
+    public DetailedMovieViewModelFactory(Application application, int movieId) {
         mApplication = application;
         mMovieId = movieId;
     }

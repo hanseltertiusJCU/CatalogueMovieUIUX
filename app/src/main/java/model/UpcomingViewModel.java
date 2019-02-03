@@ -30,22 +30,22 @@ public class UpcomingViewModel extends AndroidViewModel {
     private String upcomingUrlBase = BuildConfig.BASE_MOVIE_UPCOMING_URL;
     private String languageUs = BuildConfig.LANGUAGE_US;
 
-    // Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItems>
-    public LiveData<ArrayList<MovieItems>> getUpcomingMovies(){
-        return upcomingMovieLiveData;
-    }
-
     public UpcomingViewModel(@NonNull Application application) {
         super(application);
         upcomingMovieLiveData = new UpcomingMovieLiveData(application);
     }
 
+    // Getter method untuk mereturn LiveData yang berisi ArrayList<MovieItems>
+    public LiveData<ArrayList<MovieItems>> getUpcomingMovies() {
+        return upcomingMovieLiveData;
+    }
+
     // Create class LiveData untuk menampung ViewModel
-    public class UpcomingMovieLiveData extends LiveData<ArrayList<MovieItems>>{
+    public class UpcomingMovieLiveData extends LiveData<ArrayList<MovieItems>> {
         private final Context context;
 
         // Set constructor dari LiveData
-        public UpcomingMovieLiveData(Context context){
+        public UpcomingMovieLiveData(Context context) {
             this.context = context;
             loadUpcomingLiveData();
         }
@@ -55,7 +55,7 @@ public class UpcomingViewModel extends AndroidViewModel {
         @SuppressLint("StaticFieldLeak")
         private void loadUpcomingLiveData() {
 
-            new AsyncTask<Void, Void, ArrayList<MovieItems>>(){
+            new AsyncTask<Void, Void, ArrayList<MovieItems>>() {
                 @Override
                 protected ArrayList<MovieItems> doInBackground(Void... voids) {
 
@@ -78,11 +78,11 @@ public class UpcomingViewModel extends AndroidViewModel {
                                     MovieItems movieItems = new MovieItems(movie);
                                     // Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
                                     // String, sehingga perlu menggunakan "" di dalam null
-                                    if(!movieItems.getMoviePosterPath().equals("null")){
+                                    if (!movieItems.getMoviePosterPath().equals("null")) {
                                         movieItemses.add(movieItems);
                                     }
                                 }
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -98,9 +98,11 @@ public class UpcomingViewModel extends AndroidViewModel {
 
                 @Override
                 protected void onPostExecute(ArrayList<MovieItems> movieItems) {
+                    // Set value dari Observer yang berisi ArrayList yang merupakan
+                    // hasil dari doInBackground method
                     setValue(movieItems);
                 }
-            }.execute();
+            }.execute(); // Execute AsyncTask
         }
     }
 }

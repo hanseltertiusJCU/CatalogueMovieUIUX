@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // Beri ViewPager ke TabLayout
         tabLayout.setupWithViewPager(viewPager);
 
+        // Panggil method tsb untuk membuat isi dari setiap tab
         createTabIcons();
 
         // Set listener untuk tab layout
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
+                // Cast getPageTitle return ke String dari CharSequence (return type yang semula)
                 setActionBarTitle((String) movieSectionsFragmentPagerAdapter.getPageTitle(position));
                 // Ubah text color dan drawable tint menjadi colorAccent, yang menandakan bahwa itemnya
                 // sedang dipilih
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
     // Method tsb berguna untuk membuat icons beserta isinya di Tab
     private void createTabIcons(){
         tabNowPlaying = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        // Set isi dari text di sebuah tab
         tabNowPlaying.setText(getString(R.string.now_playing));
         // Set default text color yang menandakan bahwa tabnya itu sedang d select
         tabNowPlaying.setTextColor(getResources().getColor(R.color.colorAccent));

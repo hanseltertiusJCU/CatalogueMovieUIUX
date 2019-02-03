@@ -36,7 +36,7 @@ public class SearchViewModel extends AndroidViewModel {
         searchLiveData = new SearchLiveData(application, movieSearch);
     }
 
-    public LiveData<ArrayList<MovieItems>> getSearchMovie(){
+    public LiveData<ArrayList<MovieItems>> getSearchMovie() {
         return searchLiveData;
     }
 
@@ -45,28 +45,28 @@ public class SearchViewModel extends AndroidViewModel {
         this.mMovieSearch = mMovieSearch;
     }
 
-    public void recall(){
+    public void recall() {
         // Panggil live data dengan search keyword yang baru
         searchLiveData = new SearchLiveData(getApplication(), mMovieSearch);
     }
 
-    private class SearchLiveData extends LiveData<ArrayList<MovieItems>>{
+    private class SearchLiveData extends LiveData<ArrayList<MovieItems>> {
 
         private final Context context;
         private String searchKeyword;
 
         // Buat constructor untuk mengakomodasi parameter yang ada dari {@link SearchViewModel}
 
-        public SearchLiveData(Context context, String searchKeyword){
+        public SearchLiveData(Context context, String searchKeyword) {
             this.context = context;
             this.searchKeyword = searchKeyword;
             loadSearchMovieLiveData();
         }
 
         @SuppressLint("StaticFieldLeak")
-        private void loadSearchMovieLiveData(){
+        private void loadSearchMovieLiveData() {
 
-            new AsyncTask<Void, Void, ArrayList<MovieItems>>(){
+            new AsyncTask<Void, Void, ArrayList<MovieItems>>() {
 
                 @Override
                 protected ArrayList<MovieItems> doInBackground(Void... voids) {
@@ -76,51 +76,53 @@ public class SearchViewModel extends AndroidViewModel {
 
                     final ArrayList<MovieItems> movieItemses = new ArrayList<>();
 
-                        String searchUrl = searchUrlBase + apiKey + movieSearchQuery + mMovieSearch;
-                        syncHttpClient.get(searchUrl, new AsyncHttpResponseHandler() {
+                    String searchUrl = searchUrlBase + apiKey + movieSearchQuery + mMovieSearch;
+                    syncHttpClient.get(searchUrl, new AsyncHttpResponseHandler() {
 
-                            @Override
-                            public void onStart() {
-                                super.onStart();
-                                setUseSynchronousMode(true);
-                            }
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                            setUseSynchronousMode(true);
+                        }
 
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                try {
-                                    String result = new String(responseBody);
-                                    JSONObject responseObject = new JSONObject(result);
-                                    JSONArray results = responseObject.getJSONArray("results");
-                                    // Iterate semua data yg ada dan tambahkan ke ArrayList
-                                    for (int i = 0; i < results.length(); i++) {
-                                        JSONObject movie = results.getJSONObject(i);
-                                        MovieItems movieItems = new MovieItems(movie);
-                                        // Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
-                                        // String, sehingga perlu menggunakan "" di dalam null
-                                        if(!movieItems.getMoviePosterPath().equals("null")){
-                                            movieItemses.add(movieItems);
-                                        }
-
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            try {
+                                String result = new String(responseBody);
+                                JSONObject responseObject = new JSONObject(result);
+                                JSONArray results = responseObject.getJSONArray("results");
+                                // Iterate semua data yg ada dan tambahkan ke ArrayList
+                                for (int i = 0; i < results.length(); i++) {
+                                    JSONObject movie = results.getJSONObject(i);
+                                    MovieItems movieItems = new MovieItems(movie);
+                                    // Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
+                                    // String, sehingga perlu menggunakan "" di dalam null
+                                    if (!movieItems.getMoviePosterPath().equals("null")) {
+                                        movieItemses.add(movieItems);
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                // Do nothing jika responsenya itu tidak berhasil
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            // Do nothing jika responsenya itu tidak berhasil
+                        }
+                    });
 
                     return movieItemses;
                 }
 
                 @Override
                 protected void onPostExecute(ArrayList<MovieItems> movieItems) {
+                    // Set value dari Observer yang berisi ArrayList yang merupakan
+                    // hasil dari doInBackground method
                     setValue(movieItems);
                 }
-            }.execute();
+            }.execute(); // Execute AsyncTask
         }
     }
 }

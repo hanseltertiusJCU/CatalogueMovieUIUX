@@ -1,38 +1,31 @@
 package fragment;
 
 
-import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
-import com.example.android.cataloguemovieuiux.MainActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
-import android.arch.lifecycle.Observer;
 
 import adapter.MovieAdapter;
 import item.MovieItems;
-import model.NowPlayingViewModel;
 import model.UpcomingViewModel;
 import support.MovieItemClickSupport;
 
@@ -41,19 +34,16 @@ import support.MovieItemClickSupport;
  */
 public class UpcomingMovieFragment extends Fragment {
 
-    public static final int LOADER_ID_MOVIE = 101;
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
+    // Bikin constant (key) yang merepresent Parcelable object
+    private static final String MOVIE_LIST_STATE = "movieListState";
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
     private LinearLayout searchLayout;
-
     private UpcomingViewModel upcomingViewModel;
-
-    // Bikin constant (key) yang merepresent Parcelable object
-    private static final String MOVIE_LIST_STATE = "movieListState";
     // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
     private Parcelable mUpcomingListState = null;
     // Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
@@ -109,7 +99,7 @@ public class UpcomingMovieFragment extends Fragment {
 
         // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
         // list/item positions (scroll position)
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mUpcomingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
         }
 
@@ -123,7 +113,7 @@ public class UpcomingMovieFragment extends Fragment {
         upcomingViewModel.getUpcomingMovies().observe(this, upcomingObserver);
     }
 
-    private void showSelectedMovieItems(MovieItems movieItems){
+    private void showSelectedMovieItems(MovieItems movieItems) {
         // Dapatkan id dan title bedasarkan ListView item
         int movieIdItem = movieItems.getId();
         String movieTitleItem = movieItems.getMovieTitle();
@@ -150,7 +140,7 @@ public class UpcomingMovieFragment extends Fragment {
         super.onSaveInstanceState(outState);
         // Cek jika upcomingLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
         // di onSaveInstanceState
-        if(upcomingLinearLayoutManager != null){
+        if (upcomingLinearLayoutManager != null) {
             // Save list state/scroll position dari list
             mUpcomingListState = upcomingLinearLayoutManager.onSaveInstanceState();
             outState.putParcelable(MOVIE_LIST_STATE, mUpcomingListState);
@@ -158,7 +148,7 @@ public class UpcomingMovieFragment extends Fragment {
     }
 
     // Method tsb berguna untuk membuat observer
-    public Observer<ArrayList<MovieItems>> createObserver(){
+    public Observer<ArrayList<MovieItems>> createObserver() {
         // Buat Observer yang gunanya untuk update UI
         Observer<ArrayList<MovieItems>> observer = new Observer<ArrayList<MovieItems>>() {
             @Override

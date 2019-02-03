@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import factory.DetailedMovieViewModelFactory;
 import fragment.SearchMovieFragment;
 import item.DetailedMovieItems;
+import item.MovieItems;
 import model.DetailedMovieViewModel;
 import model.NowPlayingViewModel;
 
@@ -48,7 +49,12 @@ public class DetailActivity extends AppCompatActivity {
     private LinearLayout detailedMovieContentItem;
     private ProgressBar detailedProgressBar;
 
+    // Gunakan BuildConfig untuk menjaga credential
+    private String baseImageUrl = BuildConfig.IMAGE_MOVIE_URL;
+
     private DetailedMovieViewModel detailedMovieViewModel;
+
+    private Observer<ArrayList<DetailedMovieItems>> detailedMovieObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +80,8 @@ public class DetailActivity extends AppCompatActivity {
         detailedMovieContentItem = findViewById(R.id.detailed_movie_item);
         detailedProgressBar = findViewById(R.id.detailed_progress_bar);
 
-        // Set title untuk DetailActivity
-        setTitle(detailedMovieTitle);
+        // Set action bar title untuk DetailActivity
+        getSupportActionBar().setTitle(detailedMovieTitle);
 
         // Set visiblity of views ketika sedang dalam meretrieve data
         detailedMovieContentItem.setVisibility(View.INVISIBLE);
@@ -84,7 +90,15 @@ public class DetailActivity extends AppCompatActivity {
         // Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
         detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
 
-        final Observer<ArrayList<DetailedMovieItems>> detailedMovieObserver = new Observer<ArrayList<DetailedMovieItems>>() {
+        // Buat observer object untuk mendisplay data ke UI
+        detailedMovieObserver = createObserver();
+
+        // Tempelkan Observer ke LiveData object
+        detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
+    }
+
+    private Observer<ArrayList<DetailedMovieItems>> createObserver(){
+        Observer<ArrayList<DetailedMovieItems>> observer = new Observer<ArrayList<DetailedMovieItems>>() {
             @Override
             public void onChanged(@Nullable ArrayList<DetailedMovieItems> detailedMovieItems) {
                 // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
@@ -94,7 +108,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 // Set semua data ke dalam detail activity
                 // Load image jika ada poster path
-                Picasso.get().load("https://image.tmdb.org/t/p/w185" + detailedMovieItems.get(0).getDetailedMoviePosterPath()).into(imageViewDetailedPosterImage);
+                Picasso.get().load(baseImageUrl + detailedMovieItems.get(0).getDetailedMoviePosterPath()).into(imageViewDetailedPosterImage);
 
                 textViewDetailedMovieTitle.setText(detailedMovieItems.get(0).getDetailedMovieTitle());
 
@@ -137,9 +151,7 @@ public class DetailActivity extends AppCompatActivity {
                 textViewDetailedMovieOverview.setText(detailedMovieItems.get(0).getDetailtedMovieOverview());
             }
         };
-
-        // Tempelkan Observer ke LiveData object
-        detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
+        return observer;
     }
 }
 

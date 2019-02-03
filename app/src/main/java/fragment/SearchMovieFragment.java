@@ -1,30 +1,25 @@
 package fragment;
 
 
-import android.arch.core.util.Function;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.Parcelable;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-
 
 import com.example.android.cataloguemovieuiux.DetailActivity;
 import com.example.android.cataloguemovieuiux.R;
@@ -45,29 +40,54 @@ public class SearchMovieFragment extends Fragment {
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
+    // Bikin constant (key) yang merepresent Parcelable object
+    private static final String MOVIE_LIST_STATE = "movieListState";
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private EditText searchEditText;
     private Button searchButton;
     private ProgressBar progressBar;
     private String movieSearch;
-
     private SearchViewModel searchViewModel;
-
     private Observer<ArrayList<MovieItems>> searchObserver;
-
-    // Bikin constant (key) yang merepresent Parcelable object
-    private static final String MOVIE_LIST_STATE = "movieListState";
     // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
     private Parcelable mSearchListState = null;
     // Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
     private LinearLayoutManager searchLinearLayoutManager;
+    View.OnClickListener mySearchListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            movieSearch = searchEditText.getText().toString();
+
+            // Cek ketika edit textnya itu kosong atau tidak, ketika iya maka program tsb tidak
+            // ngapa-ngapain dengan return nothing
+            if (TextUtils.isEmpty(movieSearch))
+                return;
+
+            // Ketika kita ngeclick search, maka data akan melakukan loading kembali
+            recyclerView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+
+            // Call setter method untuk merubah value parameter di ViewModel
+            searchViewModel.setmMovieSearch(movieSearch);
+
+            // Recall live data, kesannya itu kyk merubah parameter dari ViewModelFactory
+            searchViewModel.recall();
+
+            // Buat Observer object untuk dapat merespon changes dengan mengupdate UI
+            searchObserver = createObserver();
+
+            // Replace sebuah observer ke observer yang baru untuk menampilkan LiveData yang baru
+            searchViewModel.getSearchMovie().observe(SearchMovieFragment.this, searchObserver);
+
+
+        }
+    };
 
 
     public SearchMovieFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,46 +131,17 @@ public class SearchMovieFragment extends Fragment {
 
     }
 
-    View.OnClickListener mySearchListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            movieSearch = searchEditText.getText().toString();
-
-            // Cek ketika edit textnya itu kosong atau tidak, ketika iya maka program tsb tidak
-            // ngapa-ngapain dengan return nothing
-            if (TextUtils.isEmpty(movieSearch))
-                return;
-
-            // Ketika kita ngeclick search, maka data akan melakukan loading kembali
-            recyclerView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-
-            // Call setter method untuk merubah value parameter di ViewModel
-            searchViewModel.setmMovieSearch(movieSearch);
-
-            // Recall live data
-            searchViewModel.recall();
-
-            // Buat Observer object untuk dapat merespon changes dengan mengupdate UI
-            searchObserver = createObserver();
-
-            // Tempelkan Observer ke LiveData object
-            searchViewModel.getSearchMovie().observe(SearchMovieFragment.this, searchObserver);
-
-
-        }
-    };
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
         // list/item positions (scroll position)
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mSearchListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
         }
 
+        // Placeholder keyword
         movieSearch = "avenger";
 
         // Dapatkan ViewModel yang tepat dari ViewModelProviders
@@ -162,7 +153,7 @@ public class SearchMovieFragment extends Fragment {
         searchViewModel.getSearchMovie().observe(this, searchObserver);
     }
 
-    private void showSelectedMovieItems(MovieItems movieItems){
+    private void showSelectedMovieItems(MovieItems movieItems) {
         // Dapatkan id dan title bedasarkan ListView item
         int movieIdItem = movieItems.getId();
         String movieTitleItem = movieItems.getMovieTitle();
@@ -189,7 +180,7 @@ public class SearchMovieFragment extends Fragment {
         super.onSaveInstanceState(outState);
         // Cek jika searchLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
         // di onSaveInstanceState
-        if(searchLinearLayoutManager != null){
+        if (searchLinearLayoutManager != null) {
             // Save list state/scroll position dari list
             mSearchListState = searchLinearLayoutManager.onSaveInstanceState();
             outState.putParcelable(MOVIE_LIST_STATE, mSearchListState);
@@ -197,7 +188,7 @@ public class SearchMovieFragment extends Fragment {
     }
 
     // Method tsb berguna untuk membuat observer
-    public Observer<ArrayList<MovieItems>> createObserver(){
+    public Observer<ArrayList<MovieItems>> createObserver() {
         Observer<ArrayList<MovieItems>> observer = new Observer<ArrayList<MovieItems>>() {
             @Override
             public void onChanged(@Nullable final ArrayList<MovieItems> movieItems) {

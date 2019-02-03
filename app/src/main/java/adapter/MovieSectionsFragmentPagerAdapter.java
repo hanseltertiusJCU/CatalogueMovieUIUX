@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
-    private Context mContext;
-
     // Create ArrayList untuk menampung Fragment beserta Title
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
+    private Context mContext;
 
-    public MovieSectionsFragmentPagerAdapter(Context context, FragmentManager fragmentManager){
+    public MovieSectionsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         mContext = context;
     }
@@ -35,7 +34,7 @@ public class MovieSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     // Method tsb berguna untuk memasukkan fragment dan title ke ArrayList masing-masing bedasarkan
     // input parameter yang ada
-    public void addMovieSectionFragment(Fragment fragment, String title){
+    public void addMovieSectionFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
     }

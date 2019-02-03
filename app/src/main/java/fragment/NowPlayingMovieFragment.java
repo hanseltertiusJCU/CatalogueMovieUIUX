@@ -1,23 +1,18 @@
 package fragment;
 
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.lifecycle.ViewModelStoreOwner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +23,6 @@ import com.example.android.cataloguemovieuiux.DetailActivity;
 import com.example.android.cataloguemovieuiux.R;
 
 import java.util.ArrayList;
-import android.arch.lifecycle.Observer;
 
 import adapter.MovieAdapter;
 import item.MovieItems;
@@ -43,17 +37,14 @@ public class NowPlayingMovieFragment extends Fragment {
     // Key untuk membawa data ke intent (data tidak d private untuk dapat diakses ke {@link DetailActivity})
     public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
     public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
+    // Bikin constant (key) yang merepresent Parcelable object
+    private static final String MOVIE_LIST_STATE = "movieListState";
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
     private LinearLayout searchLayout;
-
     private Observer<ArrayList<MovieItems>> nowPlayingObserver;
-
     private NowPlayingViewModel nowPlayingViewModel;
-
-    // Bikin constant (key) yang merepresent Parcelable object
-    private static final String MOVIE_LIST_STATE = "movieListState";
     // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
     private Parcelable mNowPlayingListState = null;
     // Bikin linearlayout manager untuk dapat call onsaveinstancestate method
@@ -106,7 +97,7 @@ public class NowPlayingMovieFragment extends Fragment {
 
         // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
         // list/item positions (scroll position)
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mNowPlayingListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
         }
 
@@ -120,7 +111,7 @@ public class NowPlayingMovieFragment extends Fragment {
         nowPlayingViewModel.getNowPlayingMovies().observe(this, nowPlayingObserver);
     }
 
-    private void showSelectedMovieItems(MovieItems movieItems){
+    private void showSelectedMovieItems(MovieItems movieItems) {
         // Dapatkan id dan title bedasarkan ListView item
         int movieIdItem = movieItems.getId();
         String movieTitleItem = movieItems.getMovieTitle();
@@ -147,7 +138,7 @@ public class NowPlayingMovieFragment extends Fragment {
         super.onSaveInstanceState(outState);
         // Cek jika nowPlayingLinearLayoutManager itu ada, jika tidak maka kita tidak akan ngapa2in
         // di onSaveInstanceState
-        if(nowPlayingLinearLayoutManager != null){
+        if (nowPlayingLinearLayoutManager != null) {
             // Save list state/ scroll position dari list
             mNowPlayingListState = nowPlayingLinearLayoutManager.onSaveInstanceState();
             outState.putParcelable(MOVIE_LIST_STATE, mNowPlayingListState);
@@ -156,7 +147,7 @@ public class NowPlayingMovieFragment extends Fragment {
     }
 
     // Method tsb berguna untuk membuat observer
-    public Observer<ArrayList<MovieItems>> createObserver(){
+    public Observer<ArrayList<MovieItems>> createObserver() {
         // Buat Observer yang gunanya untuk update UI
         Observer<ArrayList<MovieItems>> observer = new Observer<ArrayList<MovieItems>>() {
             // onChanged method ini gunanya untuk menggantikan onLoadFinished method dari loader
